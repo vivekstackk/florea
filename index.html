@@ -473,6 +473,245 @@
     id="florea-tab3"
     class="florea-tab3-frame"
     src="./tab3.html"
+    srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;
+&lt;title&gt;Floréa — Motion Herbarium&lt;/title&gt;
+
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.googleapis.com&quot;&gt;
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.gstatic.com&quot; crossorigin&gt;
+&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400&amp;family=Ballet&amp;family=DM+Mono:wght@300;400&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;style&gt;
+ :root{--paper:#f6f4ef;--ink:#171612;--muted:#918d84;--line:rgba(23,22,18,.13)}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink)}
+body{font-family:&quot;Bodoni Moda&quot;,serif;overflow-x:hidden}
+.sequence{height:300vh}
+.pin{position:relative;height:100vh;overflow:hidden;background:var(--paper)}
+.editorial{position:absolute;left:7vw;top:50%;transform:translateY(-50%);width:310px;z-index:8}
+.kicker{font:400 8px &quot;DM Mono&quot;,monospace;letter-spacing:.32em;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
+.title{margin:0;font-family:&quot;Bodoni Moda&quot;,serif;font-size:clamp(66px,7.2vw,112px);font-weight:400;line-height:.82;letter-spacing:-.065em}
+.copy{width:250px;margin-top:30px;font-family:&quot;Bodoni Moda&quot;,serif;font-size:17px;font-weight:400;line-height:1.42;color:#777269}
+.botanical{position:absolute;right:4vw;top:4vh;width:min(62vw,850px);height:92vh}
+.botanical svg{width:100%;height:100%;overflow:visible}
+.draw{fill:none;stroke:#26241f;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}
+.soft{fill:none;stroke:#888278;stroke-width:.65;stroke-linecap:round;opacity:.48}
+.leaf{fill:#f0ece3;stroke:#302e29;stroke-width:.9}
+.vein{fill:none;stroke:#777168;stroke-width:.6;opacity:.7}
+.petal{fill:#eee9df;stroke:#2d2a25;stroke-width:.9}
+.petalline{fill:none;stroke:#8b857b;stroke-width:.65;opacity:.65}
+.center{fill:#29251f}
+.word{position:absolute;left:51%;top:52%;transform:translate(-50%,-50%);z-index:9;text-align:center;pointer-events:none;width:430px}
+.word h2{margin:0;font-family:&quot;Ballet&quot;,cursive;font-size:clamp(72px,8vw,132px);font-weight:400;line-height:.8;letter-spacing:-.02em}
+.word p{margin:18px 0 0;font:400 8px &quot;DM Mono&quot;,monospace;letter-spacing:.34em;text-transform:uppercase;color:var(--muted)}
+.bottom{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);font:400 7px &quot;DM Mono&quot;,monospace;letter-spacing:.3em;text-transform:uppercase;color:#96928a;z-index:20;white-space:nowrap}
+.counter{position:absolute;right:28px;bottom:24px;z-index:20;font:400 8px &quot;DM Mono&quot;,monospace;letter-spacing:.22em;color:var(--muted)}
+.return{position:absolute;left:28px;bottom:20px;z-index:20;border:1px solid var(--line);background:rgba(246,244,239,.72);padding:10px 14px;font:400 7px &quot;DM Mono&quot;,monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);cursor:pointer;backdrop-filter:blur(8px)}
+@media(max-width:800px){
+  .editorial{left:22px;top:13%;transform:none;width:190px}
+  .title{font-size:56px}
+  .copy{width:180px;font-size:14px}
+  .botanical{right:-22vw;top:20vh;width:115vw;height:72vh}
+  .word{left:50%;top:58%;width:280px}
+  .word h2{font-size:76px}
+}
+@media(prefers-reduced-motion:reduce){.sequence{height:100vh}}
+&lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;section class=&quot;sequence&quot; id=&quot;sequence&quot;&gt;
+&lt;div class=&quot;pin&quot;&gt;
+
+
+&lt;div class=&quot;editorial&quot;&gt;
+&lt;div class=&quot;kicker&quot;&gt;A BOTANICAL THREAD&lt;/div&gt;
+&lt;h1 class=&quot;title&quot;&gt;The&lt;br&gt;Unfolding&lt;/h1&gt;
+&lt;p class=&quot;copy&quot;&gt;A quiet study of a flower becoming itself. Scroll through the specimen and reveal it line by line.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;botanical&quot;&gt;
+&lt;svg viewBox=&quot;0 0 760 900&quot; role=&quot;img&quot; aria-label=&quot;Botanical line drawing&quot;&gt;
+
+&lt;path id=&quot;stem&quot; class=&quot;draw&quot; d=&quot;M380 850 C372 760 386 676 376 590 C366 505 389 430 379 350 C371 282 390 220 382 150&quot;/&gt;
+
+&lt;path id=&quot;thread1&quot; class=&quot;soft&quot; d=&quot;M386 850 C421 770 423 698 411 633 C400 566 421 507 414 445&quot;/&gt;
+&lt;path id=&quot;thread2&quot; class=&quot;soft&quot; d=&quot;M369 847 C339 778 335 711 345 648 C354 586 339 521 347 462&quot;/&gt;
+
+&lt;path id=&quot;branch1&quot; class=&quot;draw&quot; d=&quot;M377 626 C330 592 287 574 237 568&quot;/&gt;
+&lt;path id=&quot;branch2&quot; class=&quot;draw&quot; d=&quot;M379 500 C426 470 467 441 513 404&quot;/&gt;
+&lt;path id=&quot;branch3&quot; class=&quot;draw&quot; d=&quot;M378 398 C333 370 298 344 262 309&quot;/&gt;
+&lt;path id=&quot;branch4&quot; class=&quot;draw&quot; d=&quot;M383 695 C430 671 472 657 522 658&quot;/&gt;
+
+&lt;path id=&quot;leaf1&quot; class=&quot;leaf&quot; d=&quot;M237 568 C197 540 166 550 149 582 C179 605 215 604 237 568Z&quot;/&gt;
+&lt;path class=&quot;vein&quot; d=&quot;M154 581 C184 582 211 575 236 568&quot;/&gt;
+
+&lt;path id=&quot;leaf2&quot; class=&quot;leaf&quot; d=&quot;M513 404 C548 369 579 374 596 404 C568 430 535 430 513 404Z&quot;/&gt;
+&lt;path class=&quot;vein&quot; d=&quot;M591 404 C561 404 537 405 514 404&quot;/&gt;
+
+&lt;path id=&quot;leaf3&quot; class=&quot;leaf&quot; d=&quot;M262 309 C226 278 197 286 181 315 C207 341 238 337 262 309Z&quot;/&gt;
+&lt;path class=&quot;vein&quot; d=&quot;M186 315 C212 316 238 313 261 309&quot;/&gt;
+
+&lt;path id=&quot;leaf4&quot; class=&quot;leaf&quot; d=&quot;M522 658 C560 630 590 640 603 670 C574 691 544 687 522 658Z&quot;/&gt;
+&lt;path class=&quot;vein&quot; d=&quot;M598 669 C570 668 545 662 523 658&quot;/&gt;
+
+&lt;g id=&quot;flower&quot;&gt;
+&lt;path class=&quot;petal&quot; d=&quot;M382 150 C342 143 312 115 323 80 C334 47 370 47 389 75 C408 43 443 48 452 80 C461 112 437 140 402 151 C429 168 430 202 402 218 C373 235 346 211 348 181 C318 189 291 168 295 139 C299 109 326 95 353 104 C341 78 355 55 381 52 C408 50 422 74 415 99 C441 87 465 102 470 128 C475 153 451 171 425 167 C435 193 418 218 393 220 C369 221 357 198 363 172Z&quot;/&gt;
+
+&lt;path class=&quot;petalline&quot; d=&quot;M382 153 C355 130 349 103 362 79&quot;/&gt;
+&lt;path class=&quot;petalline&quot; d=&quot;M386 153 C408 126 414 101 402 78&quot;/&gt;
+&lt;path class=&quot;petalline&quot; d=&quot;M385 157 C419 149 442 131 450 108&quot;/&gt;
+&lt;path class=&quot;petalline&quot; d=&quot;M378 157 C345 158 320 145 307 127&quot;/&gt;
+&lt;path class=&quot;petalline&quot; d=&quot;M386 164 C405 183 408 203 401 216&quot;/&gt;
+&lt;path class=&quot;petalline&quot; d=&quot;M375 162 C356 179 352 197 358 210&quot;/&gt;
+&lt;circle class=&quot;center&quot; cx=&quot;382&quot; cy=&quot;158&quot; r=&quot;8&quot;/&gt;
+&lt;/g&gt;
+
+&lt;path id=&quot;tail&quot; class=&quot;soft&quot; d=&quot;M380 850 C351 804 335 760 340 712&quot;/&gt;
+&lt;/svg&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;word&quot;&gt;
+&lt;h2 id=&quot;wordMain&quot;&gt;Trace&lt;/h2&gt;
+&lt;p id=&quot;wordSub&quot;&gt;01 · ROOT&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;bottom&quot;&gt;SCROLL TO REVEAL&lt;/div&gt;
+&lt;div class=&quot;counter&quot;&gt;03 / &lt;span id=&quot;counter&quot;&gt;01&lt;/span&gt;&lt;/div&gt;
+
+&lt;button class=&quot;return&quot; id=&quot;returnArchive&quot;&gt;← RETURN TO ARCHIVE&lt;/button&gt;
+
+&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;script&gt;
+(() =&gt; {
+  gsap.registerPlugin(ScrollTrigger);
+
+  const reduced = window.matchMedia(&quot;(prefers-reduced-motion: reduce)&quot;).matches;
+
+  const drawable = [
+    &quot;#stem&quot;,&quot;#thread1&quot;,&quot;#thread2&quot;,
+    &quot;#branch1&quot;,&quot;#branch2&quot;,&quot;#branch3&quot;,&quot;#branch4&quot;,
+    &quot;#leaf1&quot;,&quot;#leaf2&quot;,&quot;#leaf3&quot;,&quot;#leaf4&quot;,&quot;#tail&quot;
+  ];
+
+  drawable.forEach(selector =&gt; {
+    document.querySelectorAll(selector).forEach(el =&gt; {
+      const len = el.getTotalLength();
+      gsap.set(el,{
+        strokeDasharray:len,
+        strokeDashoffset:len
+      });
+    });
+  });
+
+  const wordMain = document.getElementById(&quot;wordMain&quot;);
+  const wordSub = document.getElementById(&quot;wordSub&quot;);
+  const counter = document.getElementById(&quot;counter&quot;);
+
+  const stages = [
+    [&quot;Trace&quot;,&quot;01 · ROOT&quot;],
+    [&quot;Rise&quot;,&quot;02 · STEM&quot;],
+    [&quot;Reach&quot;,&quot;03 · THREAD&quot;],
+    [&quot;Unfold&quot;,&quot;04 · PETAL&quot;],
+    [&quot;Bloom&quot;,&quot;05 · SPECIMEN&quot;]
+  ];
+
+  function updateStage(progress){
+    let i = 0;
+    if(progress &gt;= .82) i = 4;
+    else if(progress &gt;= .62) i = 3;
+    else if(progress &gt;= .42) i = 2;
+    else if(progress &gt;= .20) i = 1;
+
+    const next = stages[i];
+
+    if(wordMain.textContent !== next[0]){
+      gsap.to(&quot;.word&quot;,{opacity:0,y:8,duration:.12,onComplete:()=&gt;{
+        wordMain.textContent = next[0];
+        wordSub.textContent = next[1];
+        counter.textContent = String(i+1).padStart(2,&quot;0&quot;);
+        gsap.to(&quot;.word&quot;,{opacity:1,y:0,duration:.24});
+      }});
+    }
+  }
+
+  if(!reduced){
+
+    const tl = gsap.timeline({
+      scrollTrigger:{
+        trigger:&quot;#sequence&quot;,
+        start:&quot;top top&quot;,
+        end:&quot;+=1500&quot;,
+        pin:&quot;.pin&quot;,
+        scrub:.12,
+        invalidateOnRefresh:true,
+        onUpdate:self =&gt; updateStage(self.progress)
+      }
+    });
+
+    tl.to(&quot;#stem&quot;,{strokeDashoffset:0,duration:1,ease:&quot;none&quot;})
+      .to(&quot;#tail&quot;,{strokeDashoffset:0,duration:.25,ease:&quot;none&quot;})
+      .to([&quot;#branch1&quot;,&quot;#branch2&quot;,&quot;#branch3&quot;,&quot;#branch4&quot;],{
+        strokeDashoffset:0,
+        duration:.6,
+        stagger:.07,
+        ease:&quot;none&quot;
+      })
+      .to([&quot;#leaf1&quot;,&quot;#leaf2&quot;,&quot;#leaf3&quot;,&quot;#leaf4&quot;],{
+        strokeDashoffset:0,
+        duration:.65,
+        stagger:.08,
+        ease:&quot;none&quot;
+      })
+      .fromTo(&quot;#flower&quot;,
+        {opacity:0,scale:.72,transformOrigin:&quot;382px 158px&quot;},
+        {opacity:1,scale:1,duration:.9,ease:&quot;power2.out&quot;}
+      )
+      .to(&quot;.word&quot;,{y:-22,duration:.55,ease:&quot;power2.out&quot;});
+  } else {
+    drawable.forEach(selector=&gt;{
+      document.querySelectorAll(selector).forEach(el=&gt;{
+        gsap.set(el,{strokeDashoffset:0});
+      });
+    });
+  }
+
+  document.getElementById(&quot;returnArchive&quot;).addEventListener(&quot;click&quot;,()=&gt;{
+    window.parent.postMessage({type:&quot;FLOREA_TAB3_PREVIOUS&quot;},&quot;*&quot;);
+  });
+
+  window.addEventListener(&quot;wheel&quot;,event=&gt;{
+    if(event.deltaY &lt; 0){
+      const top =
+        window.scrollY ||
+        document.documentElement.scrollTop ||
+        0;
+
+      if(top &lt;= 8){
+        window.parent.postMessage({type:&quot;FLOREA_TAB3_PREVIOUS&quot;},&quot;*&quot;);
+      }
+    }
+  },{passive:true});
+
+  window.addEventListener(&quot;message&quot;,event=&gt;{
+    if(event.data?.type === &quot;FLOREA_TAB3_FOCUS_TOP&quot;){
+      window.scrollTo(0,0);
+      ScrollTrigger.refresh();
+    }
+  });
+})();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"
     title="Floréa Motion Herbarium"
     aria-hidden="true">
   </iframe>
@@ -615,6 +854,12 @@
     const nav3 = document.querySelector('[data-page="3"]');
 
     if (!tab2 || !tab3) return;
+
+    tab3.addEventListener("load", () => {
+      try {
+        tab3.contentWindow?.postMessage({ type: "FLOREA_TAB3_FOCUS_TOP" }, "*");
+      } catch (_) {}
+    });
 
     let page = 1;
     let locked = false;
