@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Floréa — Motion Herbarium</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400&family=DM+Sans:wght@300;400;500&family=Ballet&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+
+<style>
+ :root{--paper:#f6f4ef;--ink:#171612;--muted:#918d84;--line:rgba(23,22,18,.13)}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink)}
+body{font-family:"DM Sans",sans-serif;overflow-x:hidden}
+.sequence{height:300vh}
+.pin{position:relative;height:100vh;overflow:hidden;background:var(--paper)}
+.editorial{position:absolute;left:7vw;top:50%;transform:translateY(-50%);width:340px;z-index:8}
+.kicker{font:500 8px "DM Sans",sans-serif;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
+.title{margin:0;font-family:"Bodoni Moda",serif;font-size:clamp(62px,6.7vw,104px);font-weight:400;line-height:.84;letter-spacing:-.055em}
+.copy{width:275px;margin-top:28px;font-family:"DM Sans",sans-serif;font-size:15px;font-weight:300;line-height:1.65;letter-spacing:-.01em;color:#777269}
+.botanical{position:absolute;right:4vw;top:4vh;width:min(62vw,850px);height:92vh}
+.botanical svg{width:100%;height:100%;overflow:visible}
+.draw{fill:none;stroke:#26241f;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}
+.soft{fill:none;stroke:#888278;stroke-width:.65;stroke-linecap:round;opacity:.48}
+.leaf{fill:#f0ece3;stroke:#302e29;stroke-width:.9}
+.vein{fill:none;stroke:#777168;stroke-width:.6;opacity:.7}
+.petal{fill:#eee9df;stroke:#2d2a25;stroke-width:.9}
+.petalline{fill:none;stroke:#8b857b;stroke-width:.65;opacity:.65}
+.center{fill:#29251f}
+.word{position:absolute;left:52%;top:55%;transform:translate(-50%,-50%);z-index:9;text-align:center;pointer-events:none;width:360px}
+.word h2{margin:0;font-family:"Ballet",cursive;font-size:clamp(64px,6.4vw,108px);font-weight:400;line-height:.82;letter-spacing:-.015em;white-space:nowrap}
+.word p{margin:20px 0 0;font:500 7px "DM Sans",sans-serif;letter-spacing:.28em;text-transform:uppercase;color:var(--muted)}
+.bottom{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);font:500 7px "DM Sans",sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#96928a;z-index:20;white-space:nowrap}
+.counter{position:absolute;right:28px;bottom:24px;z-index:20;font:500 7px "DM Sans",sans-serif;letter-spacing:.22em;color:var(--muted)}
+.return{position:absolute;left:28px;bottom:20px;z-index:20;border:1px solid var(--line);background:rgba(246,244,239,.72);padding:10px 14px;font:500 7px "DM Sans",sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);cursor:pointer;backdrop-filter:blur(8px)}
+@media(max-width:800px){
+  .editorial{left:22px;top:12%;transform:none;width:210px}
+  .title{font-size:52px;line-height:.88}
+  .copy{width:190px;font-size:13px;line-height:1.55}
+  .botanical{right:-26vw;top:19vh;width:118vw;height:74vh}
+  .word{left:48%;top:60%;width:240px}
+  .word h2{font-size:66px}
+}
+@media(prefers-reduced-motion:reduce){.sequence{height:100vh}}
+</style>
+</head>
+
+<body>
+<section class="sequence" id="sequence">
+<div class="pin">
+
+
+<div class="editorial">
+<div class="kicker">A BOTANICAL THREAD</div>
+<h1 class="title">The<br>Unfolding</h1>
+<p class="copy">A quiet study of a flower becoming itself. Scroll through the specimen and reveal it line by line.</p>
+</div>
+
+<div class="botanical">
+<svg viewBox="0 0 760 900" role="img" aria-label="Botanical line drawing">
+
+<path id="stem" class="draw" d="M380 850 C372 760 386 676 376 590 C366 505 389 430 379 350 C371 282 390 220 382 150"/>
+
+<path id="thread1" class="soft" d="M386 850 C421 770 423 698 411 633 C400 566 421 507 414 445"/>
+<path id="thread2" class="soft" d="M369 847 C339 778 335 711 345 648 C354 586 339 521 347 462"/>
+
+<path id="branch1" class="draw" d="M377 626 C330 592 287 574 237 568"/>
+<path id="branch2" class="draw" d="M379 500 C426 470 467 441 513 404"/>
+<path id="branch3" class="draw" d="M378 398 C333 370 298 344 262 309"/>
+<path id="branch4" class="draw" d="M383 695 C430 671 472 657 522 658"/>
+
+<path id="leaf1" class="leaf" d="M237 568 C197 540 166 550 149 582 C179 605 215 604 237 568Z"/>
+<path class="vein" d="M154 581 C184 582 211 575 236 568"/>
+
+<path id="leaf2" class="leaf" d="M513 404 C548 369 579 374 596 404 C568 430 535 430 513 404Z"/>
+<path class="vein" d="M591 404 C561 404 537 405 514 404"/>
+
+<path id="leaf3" class="leaf" d="M262 309 C226 278 197 286 181 315 C207 341 238 337 262 309Z"/>
+<path class="vein" d="M186 315 C212 316 238 313 261 309"/>
+
+<path id="leaf4" class="leaf" d="M522 658 C560 630 590 640 603 670 C574 691 544 687 522 658Z"/>
+<path class="vein" d="M598 669 C570 668 545 662 523 658"/>
+
+<g id="flower">
+<path class="petal" d="M382 150 C342 143 312 115 323 80 C334 47 370 47 389 75 C408 43 443 48 452 80 C461 112 437 140 402 151 C429 168 430 202 402 218 C373 235 346 211 348 181 C318 189 291 168 295 139 C299 109 326 95 353 104 C341 78 355 55 381 52 C408 50 422 74 415 99 C441 87 465 102 470 128 C475 153 451 171 425 167 C435 193 418 218 393 220 C369 221 357 198 363 172Z"/>
+
+<path class="petalline" d="M382 153 C355 130 349 103 362 79"/>
+<path class="petalline" d="M386 153 C408 126 414 101 402 78"/>
+<path class="petalline" d="M385 157 C419 149 442 131 450 108"/>
+<path class="petalline" d="M378 157 C345 158 320 145 307 127"/>
+<path class="petalline" d="M386 164 C405 183 408 203 401 216"/>
+<path class="petalline" d="M375 162 C356 179 352 197 358 210"/>
+<circle class="center" cx="382" cy="158" r="8"/>
+</g>
+
+<path id="tail" class="soft" d="M380 850 C351 804 335 760 340 712"/>
+</svg>
+</div>
+
+<div class="word">
+<h2 id="wordMain">Trace</h2>
+<p id="wordSub">01 · ROOT</p>
+</div>
+
+<div class="bottom">SCROLL TO REVEAL</div>
+<div class="counter">03 / <span id="counter">01</span></div>
+
+<button class="return" id="returnArchive">← RETURN TO ARCHIVE</button>
+
+</div>
+</section>
+
+<script>
+(() => {
+  gsap.registerPlugin(ScrollTrigger);
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const drawable = [
+    "#stem","#thread1","#thread2",
+    "#branch1","#branch2","#branch3","#branch4",
+    "#leaf1","#leaf2","#leaf3","#leaf4","#tail"
+  ];
+
+  drawable.forEach(selector => {
+    document.querySelectorAll(selector).forEach(el => {
+      const len = el.getTotalLength();
+      gsap.set(el,{
+        strokeDasharray:len,
+        strokeDashoffset:len
+      });
+    });
+  });
+
+  const wordMain = document.getElementById("wordMain");
+  const wordSub = document.getElementById("wordSub");
+  const counter = document.getElementById("counter");
+
+  const stages = [
+    ["Trace","01 · ROOT"],
+    ["Rise","02 · STEM"],
+    ["Reach","03 · THREAD"],
+    ["Unfold","04 · PETAL"],
+    ["Bloom","05 · SPECIMEN"]
+  ];
+
+  function updateStage(progress){
+    let i = 0;
+    if(progress >= .82) i = 4;
+    else if(progress >= .62) i = 3;
+    else if(progress >= .42) i = 2;
+    else if(progress >= .20) i = 1;
+
+    const next = stages[i];
+
+    if(wordMain.textContent !== next[0]){
+      gsap.to(".word",{opacity:0,y:8,duration:.12,onComplete:()=>{
+        wordMain.textContent = next[0];
+        wordSub.textContent = next[1];
+        counter.textContent = String(i+1).padStart(2,"0");
+        gsap.to(".word",{opacity:1,y:0,duration:.24});
+      }});
+    }
+  }
+
+  if(!reduced){
+
+    const tl = gsap.timeline({
+      scrollTrigger:{
+        trigger:"#sequence",
+        start:"top top",
+        end:"+=1500",
+        pin:".pin",
+        scrub:.12,
+        invalidateOnRefresh:true,
+        onUpdate:self => updateStage(self.progress)
+      }
+    });
+
+    tl.to("#stem",{strokeDashoffset:0,duration:1,ease:"none"})
+      .to("#tail",{strokeDashoffset:0,duration:.25,ease:"none"})
+      .to(["#branch1","#branch2","#branch3","#branch4"],{
+        strokeDashoffset:0,
+        duration:.6,
+        stagger:.07,
+        ease:"none"
+      })
+      .to(["#leaf1","#leaf2","#leaf3","#leaf4"],{
+        strokeDashoffset:0,
+        duration:.65,
+        stagger:.08,
+        ease:"none"
+      })
+      .fromTo("#flower",
+        {opacity:0,scale:.72,transformOrigin:"382px 158px"},
+        {opacity:1,scale:1,duration:.9,ease:"power2.out"}
+      )
+      .to(".word",{y:-22,duration:.55,ease:"power2.out"});
+  } else {
+    drawable.forEach(selector=>{
+      document.querySelectorAll(selector).forEach(el=>{
+        gsap.set(el,{strokeDashoffset:0});
+      });
+    });
+  }
+
+  document.getElementById("returnArchive").addEventListener("click",()=>{
+    window.parent.postMessage({type:"FLOREA_TAB3_PREVIOUS"},"*");
+  });
+
+  window.addEventListener("wheel",event=>{
+    if(event.deltaY < 0){
+      const top =
+        window.scrollY ||
+        document.documentElement.scrollTop ||
+        0;
+
+      if(top <= 8){
+        window.parent.postMessage({type:"FLOREA_TAB3_PREVIOUS"},"*");
+      }
+    }
+  },{passive:true});
+
+  window.addEventListener("message",event=>{
+    if(event.data?.type === "FLOREA_TAB3_FOCUS_TOP"){
+      window.scrollTo(0,0);
+      ScrollTrigger.refresh();
+    }
+  });
+})();
+</script>
+</body>
+</html>

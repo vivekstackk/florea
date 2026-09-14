@@ -1,0 +1,1145 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400&display=swap');
+
+/* ==========================================================
+   DESIGN TOKENS
+   ========================================================== */
+:root {
+  --bg: #F5F3EE;
+  --bg-pure: #FFFFFF;
+  --fg: #11110F;
+  --fg-secondary: #54514B;
+  --muted: #8E8B83;
+  --faint: #D0CCC2;
+  --accent: #9E6E67;
+  --serif: 'Cormorant Garamond', 'Georgia', serif;
+  --mono: 'DM Mono', 'Courier New', monospace;
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-heavy: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* ==========================================================
+   RESET
+   ========================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg);
+}
+
+body {
+  color: var(--fg);
+  font-family: var(--mono);
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: none;
+  position: relative;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; background: none; border: none; }
+
+/* ==========================================================
+   GRAIN OVERLAY
+   ========================================================== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.3'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse 80% 70% at 50% 50%,
+    rgba(255,255,255,0.95) 0%,
+    rgba(245,243,238,0.45) 65%,
+    rgba(240,237,231,0.95) 100%
+  );
+}
+
+.ambient-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+/* ==========================================================
+   CUSTOM CURSOR
+   ========================================================== */
+.cursor {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 10000;
+  pointer-events: none;
+  will-change: transform;
+  mix-blend-mode: difference;
+}
+
+.cursor__dot {
+  width: 5px; height: 5px;
+  background: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cursor__reticle {
+  position: absolute;
+  top: 0; left: 0;
+  width: 26px; height: 26px;
+  border: 1px solid rgba(255,255,255,0.45);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0;
+  transition: transform 0.4s var(--ease-smooth), opacity 0.4s;
+}
+
+.cursor.is-hover .cursor__reticle {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.35);
+  border-color: rgba(255,255,255,0.85);
+}
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+.header {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.header > * { pointer-events: auto; }
+
+.header__logo {
+  position: absolute;
+  left: 40px;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: var(--fg);
+}
+
+.header__nav {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 3px 5px;
+  border: 1px solid rgba(0,0,0,0.05);
+  gap: 3px;
+}
+
+.header__nav a {
+  color: var(--fg);
+  padding: 5px 10px;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  transition: background 0.25s, color 0.25s;
+  cursor: none;
+}
+
+.header__nav a:hover { background: rgba(0,0,0,0.04); }
+.header__nav a.is-active { background: rgba(0,0,0,0.07); font-weight: 400; }
+
+/* ==========================================================
+   3D SPATIAL VIEWPORT
+   ========================================================== */
+.canvas-viewport {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 10;
+  cursor: grab;
+  perspective: 1600px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+.canvas-viewport.is-dragging {
+  cursor: grabbing;
+}
+
+/* ==========================================================
+   3D GALLERY SCENE
+   ========================================================== */
+.gallery-scene {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  transform-origin: 0 0 0;
+  will-change: transform;
+}
+
+/* ==========================================================
+   CARDS: 3D Botanical Specimen Plates
+   ========================================================== */
+.card {
+  position: absolute;
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+  pointer-events: auto;
+  transform-origin: 50% 50%;
+  backface-visibility: visible;
+  transition: box-shadow 0.4s var(--ease-smooth);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+  will-change: transform, opacity, filter;
+}
+
+.card:hover {
+  box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+}
+
+.card-img {
+  width: 86%;
+  height: 86%;
+  object-fit: contain;
+  display: block;
+  margin: 7% auto;
+}
+
+/* Card background variants */
+.card--white { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.05); }
+.card--black { background: #10100E; border: 1px solid rgba(255,255,255,0.08); }
+.card--black .card-img { filter: drop-shadow(0 3px 10px rgba(0,0,0,0.4)); }
+.card--gray { background: #E8E7E2; border: 1px solid rgba(0,0,0,0.04); }
+.card--slate { background: #CCD1DA; border: 1px solid rgba(0,0,0,0.05); }
+.card--pink { background: #EADCD8; border: 1px solid rgba(0,0,0,0.04); }
+.card--ivory { background: #ECE9E1; border: 1px solid rgba(0,0,0,0.04); }
+.card--darkgreen { background: #0D1610; border: 1px solid rgba(255,255,255,0.06); }
+
+.card--pinstripe {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.pinstripe-content {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, #fff, #fff 5px, #f2f1ed 5px, #f2f1ed 6px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 4px;
+}
+
+.pinstripe-vert {
+  font-size: 5px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.card-img-small {
+  width: 55%;
+  height: auto;
+}
+
+.pinstripe-ref {
+  font-size: 5px;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+}
+
+/* ==========================================================
+   CARD HERO ENHANCEMENT
+   ========================================================== */
+.card--hero {
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+}
+
+/* ==========================================================
+   EXHIBITION FOOTER
+   ========================================================== */
+.archive-footer {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  z-index: 90;
+  pointer-events: none;
+}
+
+.archive-footer__brand {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: var(--fg);
+}
+
+.archive-footer__tag {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ==========================================================
+   DETAIL OVERLAY
+   ========================================================== */
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  pointer-events: none;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 5vw;
+}
+
+.detail-overlay.is-active { pointer-events: auto; }
+
+.detail-panel {
+  width: min(380px, 88vw);
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 25px 60px rgba(20,15,10,0.09);
+  padding: 28px 24px;
+  position: relative;
+}
+
+.detail-panel__close {
+  position: absolute;
+  top: 16px; right: 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 7px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.detail-panel__close:hover { color: var(--fg); }
+.close-x { font-size: 15px; line-height: 1; font-weight: 300; }
+
+.detail-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 7px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  padding-bottom: 9px;
+  margin-bottom: 14px;
+}
+
+.detail-ref { color: var(--accent); }
+
+.detail-name {
+  font-family: var(--serif);
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 300;
+  color: var(--fg);
+  line-height: 1.1;
+  margin-bottom: 3px;
+  letter-spacing: 0.02em;
+}
+
+.detail-latin {
+  font-family: var(--serif);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.detail-emotion-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.emotion-k { font-size: 6.5px; letter-spacing: 0.24em; color: var(--muted); }
+.emotion-v { font-size: 10px; letter-spacing: 0.26em; color: var(--accent); font-weight: 400; }
+
+.detail-secondary { font-size: 6.5px; letter-spacing: 0.18em; color: var(--muted); margin-bottom: 10px; }
+
+.detail-meaning {
+  font-family: var(--serif);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--fg-secondary);
+  font-style: italic;
+  border-left: 1px solid var(--accent);
+  padding-left: 10px;
+  margin-bottom: 12px;
+}
+
+.detail-divider { width: 100%; height: 1px; background: rgba(0,0,0,0.04); margin: 8px 0 12px; }
+
+.detail-desc {
+  font-family: var(--serif);
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--fg);
+  margin-bottom: 14px;
+}
+
+.detail-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  border-top: 1px solid rgba(0,0,0,0.04);
+  padding-top: 10px;
+}
+
+.meta-row { display: flex; flex-direction: column; gap: 2px; }
+.meta-k { font-size: 6px; letter-spacing: 0.2em; color: var(--muted); }
+.meta-v { font-size: 8.5px; line-height: 1.5; color: var(--fg-secondary); }
+
+.detail-panel__footer {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  margin-top: 14px;
+  padding-top: 8px;
+  font-size: 6px;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+}
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+@media (max-width: 1024px) {
+  .detail-overlay {
+    justify-content: center;
+    padding-right: 0;
+    align-items: flex-end;
+    padding-bottom: 4vh;
+  }
+}
+
+@media (max-width: 768px) {
+  body { cursor: auto; }
+  .cursor { display: none !important; }
+  .header__nav { display: none; }
+  .header__logo { left: 20px; }
+}
+/* ==========================================================
+   FLORÉA — FIRST ENTRY ANIMATION
+   ========================================================== */
+
+/* Hide footer during the opening so the single
+   center specimen feels completely isolated. */
+
+.intro-active .archive-footer {
+  opacity: 0;
+}
+
+.archive-footer {
+  transition:
+    opacity 0.8s ease;
+}
+
+/* Cursor becomes neutral while the intro is playing. */
+
+.intro-active .canvas-viewport {
+  cursor: default;
+}
+
+/* Prevent accidental interaction during intro. */
+
+.intro-active .card {
+  pointer-events: none;
+}
+/* ==========================================================
+   FLORÉA — INTRO STATE
+   ========================================================== */
+
+.intro-active .archive-footer {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.intro-active .card {
+  pointer-events: none;
+}
+
+.intro-active .canvas-viewport {
+  cursor: default;
+}
+
+/* ==========================================================
+   FLORÉA — TAB 2 · PERSONALIZED FLOWER EXPERIENCE
+   ----------------------------------------------------------
+   ISOLATED BLOCK — APPENDED ONLY.
+   Nothing above this line is modified.
+   Every selector is prefixed with .florea-personal-
+   (or scoped under html.florea-personal-mode)
+   ========================================================== */
+
+/* ----------------------------------------------------------
+   1. PAGE SHELL (hidden by default)
+   ---------------------------------------------------------- */
+.florea-personal-page {
+  position: fixed;
+  inset: 0;
+  z-index: 60;                 /* above viewport (10), below header (100) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 90px 40px 70px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #F5F3EE;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(100%);
+  transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease, visibility 0s linear 0.8s;
+  will-change: transform, opacity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.florea-personal-page.is-visible {
+  visibility: visible;
+  pointer-events: auto;
+  opacity: 1;
+  transform: translateY(0);
+  transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease, visibility 0s linear 0s;
+}
+
+/* Soft ivory vignette, no gradients on content itself */
+.florea-personal-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 75% 65% at 50% 45%,
+    rgba(255,255,255,0.92) 0%,
+    rgba(245,243,238,0.35) 70%,
+    rgba(240,237,231,0.9) 100%
+  );
+}
+
+.florea-personal-page__inner {
+  position: relative;
+  width: 100%;
+  max-width: 1080px;
+  margin: auto;
+}
+
+/* ----------------------------------------------------------
+   2. ARCHIVE SUPPRESSION WHILE TAB 2 IS OPEN
+      (visual only — archive state is never mutated)
+   ---------------------------------------------------------- */
+html.florea-personal-mode .canvas-viewport {
+  opacity: 0;
+  pointer-events: none !important;
+  transition: opacity 0.8s ease;
+}
+
+html.florea-personal-mode .archive-footer,
+html.florea-personal-mode .ambient-canvas {
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+html.florea-personal-mode .detail-overlay {
+  pointer-events: none !important;
+}
+
+/* Text entry needs a real caret + selection inside Tab 2 only */
+html.florea-personal-mode .florea-personal-page,
+html.florea-personal-mode .florea-personal-page * {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* ----------------------------------------------------------
+   3. NAME ENTRY SCREEN
+   ---------------------------------------------------------- */
+.florea-personal-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+}
+
+.florea-personal-intro__eyebrow {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: #8E8B83;
+  margin-bottom: 26px;
+}
+
+.florea-personal-intro__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(38px, 7vw, 84px);
+  line-height: 1;
+  letter-spacing: 0.16em;
+  color: #11110F;
+  margin-bottom: 18px;
+}
+
+.florea-personal-intro__rule {
+  width: 1px;
+  height: 54px;
+  background: #D0CCC2;
+  margin: 4px 0 30px;
+}
+
+.florea-personal-intro__note {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(13px, 1.4vw, 16px);
+  line-height: 1.7;
+  color: #54514B;
+  max-width: 30ch;
+  margin-bottom: 46px;
+}
+
+/* --- the input: a single hairline, no box --- */
+.florea-personal-field {
+  width: min(360px, 78vw);
+  margin-bottom: 44px;
+}
+
+.florea-personal-field__input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #D0CCC2;
+  outline: none;
+  padding: 10px 2px 12px;
+  text-align: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(18px, 2.2vw, 26px);
+  letter-spacing: 0.12em;
+  color: #11110F;
+  cursor: text;
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.florea-personal-field__input::placeholder {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #B4B0A7;
+}
+
+.florea-personal-field__input:focus {
+  border-bottom-color: #11110F;
+}
+
+.florea-personal-field__hint {
+  margin-top: 12px;
+  min-height: 11px;
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 7px;
+  letter-spacing: 0.2em;
+  color: #9E6E67;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.florea-personal-field__hint.is-shown { opacity: 1; }
+
+/* --- CONTINUE --- */
+.florea-personal-continue {
+  position: relative;
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  color: #11110F;
+  padding: 13px 30px;
+  border: 1px solid rgba(0,0,0,0.14);
+  background: transparent;
+  cursor: none;
+  transition:
+    background 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    letter-spacing 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.florea-personal-continue:hover {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.34);
+  letter-spacing: 0.4em;
+}
+
+/* ----------------------------------------------------------
+   4. RESULT — PERSONALISED SPECIMEN
+   ---------------------------------------------------------- */
+.florea-personal-result {
+  display: none;
+}
+
+.florea-personal-result.is-active {
+  display: block;
+}
+
+.florea-personal-result__salutation {
+  text-align: center;
+  margin-bottom: 46px;
+}
+
+.florea-personal-result__name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(26px, 3.4vw, 42px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #11110F;
+  margin-bottom: 12px;
+  word-break: break-word;
+}
+
+.florea-personal-result__line {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  color: #8E8B83;
+}
+
+/* two-column editorial specimen sheet */
+.florea-personal-specimen {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(32px, 6vw, 76px);
+  align-items: center;
+}
+
+.florea-personal-flower {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.florea-personal-flower__frame {
+  position: relative;
+  width: 100%;
+  max-width: 390px;
+  aspect-ratio: 4 / 5;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.florea-personal-flower__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.florea-personal-flower__ref {
+  position: absolute;
+  bottom: -22px;
+  left: 0;
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: #8E8B83;
+}
+
+/* --- details --- */
+.florea-personal-details {
+  min-width: 0;
+}
+
+.florea-personal-details__eyebrow {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: #8E8B83;
+  margin-bottom: 14px;
+}
+
+.florea-personal-details__name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(34px, 4.6vw, 62px);
+  line-height: 1.02;
+  letter-spacing: 0.06em;
+  color: #11110F;
+}
+
+.florea-personal-details__latin {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(13px, 1.5vw, 17px);
+  letter-spacing: 0.05em;
+  color: #54514B;
+  margin-top: 8px;
+}
+
+.florea-personal-details__divider {
+  width: 46px;
+  height: 1px;
+  background: #D0CCC2;
+  margin: 24px 0;
+}
+
+.florea-personal-details__meaning {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(17px, 2.1vw, 25px);
+  line-height: 1.5;
+  color: #11110F;
+  border: none;
+  padding: 0;
+  margin: 0 0 26px;
+}
+
+.florea-personal-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 24px;
+  padding: 18px 0;
+  border-top: 1px solid rgba(0,0,0,0.07);
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+  margin-bottom: 26px;
+}
+
+.florea-personal-meta__row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.florea-personal-meta__k {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  color: #8E8B83;
+}
+
+.florea-personal-meta__v {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 10px;
+  line-height: 1.65;
+  letter-spacing: 0.06em;
+  color: #54514B;
+}
+
+.florea-personal-message {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(14px, 1.6vw, 18px);
+  line-height: 1.85;
+  color: #54514B;
+  max-width: 46ch;
+}
+
+.florea-personal-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 34px;
+  flex-wrap: wrap;
+}
+
+.florea-personal-action {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  color: #11110F;
+  padding: 11px 22px;
+  border: 1px solid rgba(0,0,0,0.14);
+  background: transparent;
+  cursor: none;
+  transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.florea-personal-action:hover {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.32);
+}
+
+.florea-personal-action--ghost { border-color: transparent; color: #8E8B83; }
+.florea-personal-action--ghost:hover { color: #11110F; background: transparent; }
+
+/* Mobile entry point — the existing desktop nav rules are untouched,
+   and this element never renders above 768px. */
+.florea-personal-mobile-toggle {
+  display: none;
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 120;
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 8px;
+  letter-spacing: 0.26em;
+  color: #11110F;
+  padding: 11px 20px;
+  border: 1px solid rgba(0,0,0,0.14);
+  background: rgba(255,255,255,0.82);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* ----------------------------------------------------------
+   6. RESPONSIVE (scoped to Tab 2 only)
+   ---------------------------------------------------------- */
+@media (max-width: 900px) {
+  .florea-personal-specimen {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 44px;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .florea-personal-details { text-align: center; }
+  .florea-personal-details__divider { margin-left: auto; margin-right: auto; }
+  .florea-personal-message { margin-left: auto; margin-right: auto; }
+  .florea-personal-actions { justify-content: center; }
+  .florea-personal-flower__ref { position: static; display: block; margin-top: 14px; }
+}
+
+@media (max-width: 768px) {
+  .florea-personal-mobile-toggle { display: block; }
+
+  .florea-personal-page {
+    padding: 84px 22px 96px;
+    align-items: flex-start;
+  }
+
+  .florea-personal-continue,
+  .florea-personal-action { cursor: pointer; }
+
+  .florea-personal-field__input { cursor: text; }
+
+  .florea-personal-meta { grid-template-columns: minmax(0, 1fr); }
+
+  .florea-personal-intro__note { margin-bottom: 36px; }
+}
+
+@media (max-width: 420px) {
+  .florea-personal-page { padding: 76px 18px 96px; }
+  .florea-personal-intro__title { letter-spacing: 0.1em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .florea-personal-page,
+  .florea-personal-page * { transition-duration: 0.01ms !important; }
+}
+
+
+/* ==========================================================
+   FLORÉA — COMPACT SQUARE SPECIMEN FIX
+   ----------------------------------------------------------
+   Geometry-only override.
+   Existing animation, 3D rotation, navigation, focus panel,
+   and Tab 2 remain unchanged.
+   ========================================================== */
+
+.canvas-viewport .gallery-scene .card {
+  width: 96px !important;
+  height: 96px !important;
+  min-width: 96px !important;
+  min-height: 96px !important;
+  max-width: 96px !important;
+  max-height: 96px !important;
+  box-sizing: border-box;
+}
+
+.canvas-viewport .gallery-scene .card-img {
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  display: block !important;
+}
+
+.canvas-viewport .gallery-scene .card--black .card-img {
+  filter: drop-shadow(0 2px 7px rgba(0,0,0,0.34));
+}
+
+/* Keep the cards crisp and visually close to the original compact archive. */
+.canvas-viewport .gallery-scene .card {
+  transform-origin: 50% 50% !important;
+  border-radius: 2px;
+}
+/* ADD THIS AT THE VERY END OF style.css */
+
+.card {
+  width: 96px !important;
+  height: 96px !important;
+  border: none !important;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.045);
+}
+
+.card--white,
+.card--black,
+.card--gray,
+.card--slate,
+.card--pink,
+.card--ivory,
+.card--darkgreen,
+.card--pinstripe,
+.card--hero {
+  border: none !important;
+  background: transparent !important;
+}
+
+.card--black .card-img {
+  filter: none !important;
+}
+
+.card-img {
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+/* ==========================================================
+   FLORÉA — TAB 2 VISIBILITY STATE
+   Additive only. Existing archive styles remain untouched.
+   ========================================================== */
+.florea-personal-page.is-visible {
+  opacity: 1 !important;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) !important;
+}
+/* ==========================================================
+   FLORÉA — AMBIENT MUSIC
+   ========================================================== */
+
+.music-toggle {
+  position: fixed;
+  right: 34px;
+  bottom: 30px;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 8px 11px;
+
+  background: rgba(245, 243, 238, 0.72);
+  border: 1px solid rgba(17, 17, 15, 0.12);
+
+  color: #11110F;
+  font-family: 'DM Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 0.2em;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  transition:
+    background 0.35s ease,
+    border-color 0.35s ease,
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.music-toggle:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(17, 17, 15, 0.28);
+  transform: translateY(-2px);
+}
+
+.music-toggle__icon {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.music-toggle.is-playing .music-toggle__icon {
+  animation: musicPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes musicPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+
+  50% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .music-toggle {
+    right: 18px;
+    bottom: 18px;
+  }
+}

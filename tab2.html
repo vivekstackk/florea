@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FLORÉA — Personal Herbarium</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Allura&family=Italianno&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+  <style>
+
+    @font-face {
+      font-family: "Oneheart Script";
+      src: local("Oneheart Script"), local("OneheartScript");
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+    }
+
+    :root {
+      --paper: #f4f2ed;
+      --ink: #151412;
+      --soft-ink: #777269;
+      --faint: #aaa59c;
+      --line: rgba(21,20,18,.16);
+      --white: #fbfaf7;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--paper);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 20% 18%, rgba(255,255,255,.75), transparent 30%),
+        radial-gradient(circle at 82% 74%, rgba(229,226,217,.42), transparent 30%),
+        var(--paper);
+      color: var(--ink);
+      font-family: "Oneheart Script", "Allura", "Italianno", cursive;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: .22;
+      background-image:
+        radial-gradient(circle at 10% 20%, #000 0 .35px, transparent .5px),
+        radial-gradient(circle at 80% 70%, #000 0 .3px, transparent .5px);
+      background-size: 190px 170px, 230px 210px;
+      mix-blend-mode: multiply;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    .topline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--ink);
+      z-index: 50;
+      opacity: .72;
+    }
+
+    .page-header {
+      position: fixed;
+      inset: 0 0 auto;
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      z-index: 40;
+      pointer-events: none;
+    }
+
+    .brand {
+      font-family: "Playfair Display", serif;
+      font-size: 17px;
+      font-weight: 400;
+      letter-spacing: .27em;
+      pointer-events: auto;
+    }
+
+    .chapter {
+      font-family: "DM Mono", monospace;
+      font-size: 7px;
+      letter-spacing: .24em;
+      color: var(--faint);
+      text-transform: uppercase;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      padding: 78px 6vw 80px;
+    }
+
+    .hero {
+      width: min(1080px, 90vw);
+      min-height: calc(100vh - 130px);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .eyebrow {
+      font-family: "DM Mono", monospace;
+      font-size: 7px;
+      letter-spacing: .34em;
+      color: var(--faint);
+      text-transform: none;
+      margin-bottom: 26px;
+    }
+
+    .hero-title {
+      margin: 0;
+      font-family: "Oneheart Script", "Allura", "Italianno", cursive;
+      font-size: clamp(82px, 10vw, 145px);
+      font-weight: 400;
+      line-height: .86;
+      letter-spacing: .01em;
+      word-spacing: .42em;
+      transform: rotate(-2deg);
+    }
+
+    .hero-title::after {
+      content: "";
+      display: block;
+      width: 72px;
+      height: 1px;
+      background: var(--ink);
+      opacity: .35;
+      margin: 34px auto 0;
+      transform: rotate(2deg);
+    }
+
+    .intro {
+      width: min(450px, 90vw);
+      margin: 30px 0 0;
+      font-family: "Oneheart Script", "Allura", "Italianno", cursive;
+      font-size: clamp(25px, 2.2vw, 33px);
+      line-height: 1.08;
+      color: var(--soft-ink);
+    }
+
+    .name-form {
+      width: min(450px, 86vw);
+      margin-top: 54px;
+    }
+
+    .name-input {
+      width: 100%;
+      height: 64px;
+      padding: 0 12px 9px;
+      border: 0;
+      border-bottom: 1px solid var(--ink);
+      outline: none;
+      background: transparent;
+      color: var(--ink);
+      text-align: center;
+      font-family: "Oneheart Script", "Allura", "Italianno", cursive;
+      font-size: 44px;
+      line-height: 1;
+      transition: border-color .3s ease;
+    }
+
+    .name-input:focus {
+      border-bottom-color: var(--ink);
+    }
+
+    .name-input::placeholder {
+      font-family: "DM Mono", monospace;
+      font-size: 7px;
+      letter-spacing: .3em;
+      color: var(--faint);
+      text-transform: uppercase;
+      opacity: 1;
+    }
+
+    .continue,
+    .action {
+      font-family: "DM Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: .22em;
+    }
+
+    .continue {
+      margin-top: 27px;
+      padding: 14px 30px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--ink);
+      font-size: 7px;
+      transition: .3s ease;
+    }
+
+    .continue:hover {
+      background: var(--ink);
+      color: var(--paper);
+      transform: translateY(-2px);
+    }
+
+    .hint {
+      margin-top: 13px;
+      font-family: "DM Mono", monospace;
+      font-size: 6px;
+      letter-spacing: .18em;
+      color: var(--faint);
+      text-transform: uppercase;
+    }
+
+    .error {
+      display: none;
+      margin-top: 12px;
+      font-family: "DM Mono", monospace;
+      font-size: 7px;
+      letter-spacing: .18em;
+      color: #8c5d54;
+    }
+
+    .result {
+      display: none;
+      width: min(1260px, 92vw);
+      margin: 0 auto;
+      padding: 50px 0 95px;
+    }
+
+    .result.is-visible {
+      display: block;
+      animation: reveal .9s cubic-bezier(.16,1,.3,1) both;
+    }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 58px;
+    }
+
+    .result-kicker,
+    .result-number,
+    .your-specimen,
+    .meta-label,
+    .image-caption,
+    .footer,
+    .return-hint {
+      font-family: "DM Mono", monospace;
+      text-transform: uppercase;
+    }
+
+    .result-kicker,
+    .result-number {
+      font-size: 7px;
+      letter-spacing: .27em;
+      color: var(--faint);
+    }
+
+
+    .personal-result-intro {
+      width: min(720px, 86vw);
+      margin: 0 auto 62px;
+      text-align: center;
+      position: relative;
+    }
+
+    .personal-result-name {
+      font-family: "Oneheart Script", "Allura", "Italianno", cursive;
+      font-size: clamp(58px, 7vw, 96px);
+      line-height: .9;
+      font-weight: 400;
+      letter-spacing: .01em;
+      word-spacing: .12em;
+    }
+
+    .personal-result-answer {
+      margin-top: 18px;
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      line-height: 1.6;
+      letter-spacing: .22em;
+      text-transform: lowercase;
+      color: var(--soft-ink);
+    }
+
+    .personal-result-answer span {
+      font-family: "Oneheart Script", "Allura", "Italianno", cursive;
+      font-size: 37px;
+      letter-spacing: .01em;
+      color: var(--ink);
+      vertical-align: -7px;
+      margin-left: 4px;
+      text-transform: none;
+    }
+
+    .personal-result-why {
+      width: min(500px, 88vw);
+      margin: 22px auto 0;
+      font-family: "Italianno", "Oneheart Script", cursive;
+      font-size: 28px;
+      line-height: 1.05;
+      color: var(--soft-ink);
+    }
+
+    .personal-result-intro::after {
+      content: "";
+      display: block;
+      width: 42px;
+      height: 1px;
+      background: var(--ink);
+      opacity: .28;
+      margin: 28px auto 0;
+    }
+
+    .specimen {
+      display: grid;
+      grid-template-columns: minmax(360px, .88fr) minmax(390px, 1.12fr);
+      gap: clamp(65px, 9vw, 145px);
+      align-items: start;
+    }
+
+    .image-column {
+      position: sticky;
+      top: 105px;
+    }
+
+    .image-frame {
+      width: 100%;
+      aspect-ratio: 1 / 1.13;
+      position: relative;
+      overflow: hidden;
+      background: var(--white);
+    }
+
+    .image-frame::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(21,20,18,.16);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .image-frame::after {
+      content: "FLORÉA";
+      position: absolute;
+      right: 25px;
+      bottom: 21px;
+      z-index: 3;
+      font-family: "Playfair Display", serif;
+      font-size: 8px;
+      letter-spacing: .24em;
+      color: rgba(21,20,18,.5);
+    }
+
+    .flower-image {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      transition: transform 1.2s cubic-bezier(.16,1,.3,1);
+    }
+
+    .image-frame:hover .flower-image {
+      transform: scale(1.035);
+    }
+
+    .image-caption {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 11px;
+      font-size: 6px;
+      letter-spacing: .21em;
+      color: var(--faint);
+    }
+
+    .info-column {
+      padding-top: 3px;
+      max-width: 650px;
+    }
+
+    .your-specimen {
+      font-size: 7px;
+      letter-spacing: .28em;
+      color: var(--faint);
+      margin-bottom: 18px;
+    }
+
+    .flower-name {
+      margin: 0;
+      font-family: "Oneheart Script", "Allura", "Italianno", cursive;
+      font-size: clamp(72px, 7.8vw, 118px);
+      line-height: .72;
+      font-weight: 400;
+      letter-spacing: .01em;
+      transform: rotate(-1deg);
+      transform-origin: left center;
+    }
+
+    .latin {
+      margin-top: 25px;
+      font-family: "Oneheart Script", "Allura", "Italianno", cursive;
+      font-size: 29px;
+      color: var(--soft-ink);
+    }
+
+    .accent-line {
+      width: 54px;
+      height: 1px;
+      background: var(--ink);
+      opacity: .4;
+      margin: 34px 0 29px;
+    }
+
+    .meaning {
+      margin: 0;
+      max-width: 630px;
+      font-family: "Oneheart Script", "Allura", "Italianno", cursive;
+      font-size: clamp(31px, 3vw, 47px);
+      line-height: .98;
+      font-weight: 400;
+    }
+
+    .meta {
+      margin-top: 45px;
+      border-top: 1px solid var(--line);
+    }
+
+    .meta-row {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 25px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .meta-label {
+      font-size: 6px;
+      letter-spacing: .22em;
+      color: var(--faint);
+      padding-top: 7px;
+    }
+
+    .meta-value {
+      font-family: "Oneheart Script", "Allura", "Italianno", cursive;
+      font-size: 26px;
+      line-height: .95;
+    }
+
+    .message {
+      max-width: 580px;
+      margin: 42px 0 0;
+      font-family: "Oneheart Script", "Allura", "Italianno", cursive;
+      font-size: 29px;
+      line-height: 1.05;
+      color: var(--soft-ink);
+    }
+
+    .personal-fit {
+      position: relative;
+      padding-left: 22px;
+      border-left: 1px solid var(--line);
+    }
+
+    .personal-fit::before {
+      content: "WHY IT SUITS YOU";
+      display: block;
+      margin-bottom: 12px;
+      font-family: "DM Mono", monospace;
+      font-size: 6px;
+      letter-spacing: .24em;
+      color: var(--faint);
+    }
+
+    .actions {
+      display: flex;
+      gap: 9px;
+      margin-top: 39px;
+      flex-wrap: wrap;
+    }
+
+    .action {
+      padding: 13px 18px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--ink);
+      font-size: 6px;
+      transition: .25s ease;
+    }
+
+    .action:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      max-width: 1260px;
+      margin: 75px auto 0;
+      padding-top: 17px;
+      border-top: 1px solid var(--line);
+      font-size: 6px;
+      letter-spacing: .21em;
+      color: var(--faint);
+    }
+
+    .return-hint {
+      position: fixed;
+      bottom: 19px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 30;
+      font-size: 6px;
+      letter-spacing: .22em;
+      color: #aaa59d;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 850px) {
+      .personal-result-answer {
+        font-size: 9px;
+      }
+
+      .personal-result-answer span {
+        font-size: 31px;
+      }
+
+      .personal-result-intro {
+        margin-bottom: 45px;
+      }
+
+      .personal-result-name {
+        font-size: clamp(55px, 15vw, 82px);
+      }
+
+
+      .page-header {
+        padding: 0 19px;
+        height: 65px;
+      }
+
+      .page {
+        padding: 72px 22px 60px;
+      }
+
+      .hero {
+        width: 100%;
+        min-height: calc(100vh - 115px);
+      }
+
+      .hero-title {
+        font-size: clamp(68px, 20vw, 110px);
+      }
+
+      .intro {
+        font-size: 25px;
+      }
+
+      .specimen {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .image-column {
+        position: relative;
+        top: auto;
+      }
+
+      .flower-name {
+        font-size: clamp(70px, 17vw, 110px);
+      }
+
+      .result-head {
+        margin-bottom: 38px;
+      }
+
+      .footer {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .chapter {
+        display: none;
+      }
+
+      .hero-title {
+        font-size: 70px;
+      }
+
+      .name-input {
+        font-size: 38px;
+      }
+
+      .result {
+        width: 100%;
+        padding-top: 25px;
+      }
+
+      .result-head {
+        margin-bottom: 30px;
+      }
+
+      .meta-row {
+        grid-template-columns: 82px 1fr;
+        gap: 12px;
+      }
+
+      .meta-value {
+        font-size: 23px;
+      }
+
+      .return-hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topline"></div>
+
+  <header class="page-header">
+    <div class="chapter">02 / PERSONAL HERBARIUM</div>
+  </header>
+
+  <main class="page">
+
+    <section class="hero" id="hero">
+      <div class="eyebrow">Personal Herbarium</div>
+
+      <h1 class="hero-title">YOUR NAME</h1>
+
+      <div class="hero-rule"></div>
+
+      <p class="intro">
+        Every name carries a bloom. Tell us yours and
+        the archive will find the specimen that belongs to you.
+      </p>
+
+      <form class="name-form" id="name-form">
+        <input
+          class="name-input"
+          id="personal-name-input"
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="ENTER YOUR NAME"
+          aria-label="Enter your name"
+        >
+
+        <button class="continue" id="personal-continue" type="submit">
+          Continue
+        </button>
+
+        <div class="hint">A specimen will be selected from the Floréa archive</div>
+        <div class="error" id="name-error">PLEASE ENTER YOUR NAME</div>
+      </form>
+    </section>
+
+    <section class="result" id="personal-result">
+
+      <div class="result-head">
+        <span class="result-kicker">Your Botanical Record</span>
+        <span class="result-number" id="personal-flower-ref">SPECIMEN 001</span>
+      </div>
+
+      <div class="personal-result-intro">
+        <div class="personal-result-name" id="personal-out-name">Vivek</div>
+        <div class="personal-result-answer">your flower is <span id="personal-out-flower">Rose</span></div>
+        <p class="personal-result-why" id="personal-out-message">
+          A flower chosen from the character of your name — and the qualities it carries.
+        </p>
+      </div>
+
+      <div class="specimen">
+
+        <div class="image-column">
+          <div class="image-frame">
+            <img
+              id="personal-flower-img"
+              class="flower-image"
+              src="assets/images/flower-iris.png"
+              alt="Your selected flower"
+            >
+          </div>
+
+          <div class="image-caption">
+            <span id="personal-out-specimen">SPECIMEN 001</span>
+            <span>FLORÉA ARCHIVE</span>
+          </div>
+        </div>
+
+        <div class="info-column">
+
+          <div class="your-specimen">Your Specimen</div>
+
+          <h2 class="flower-name" id="personal-out-flower">
+            Iris
+          </h2>
+
+          <div class="latin" id="personal-out-latin">
+            Iris germanica
+          </div>
+
+          <div class="accent-line"></div>
+
+          <p class="meaning" id="personal-out-meaning">
+            Divine wisdom, profound faith, and quiet communication.
+          </p>
+
+          <div class="meta">
+
+            <div class="meta-row">
+              <div class="meta-label">Emotion</div>
+              <div class="meta-value" id="personal-out-emotion">WISDOM</div>
+            </div>
+
+            <div class="meta-row">
+              <div class="meta-label">Symbolism</div>
+              <div class="meta-value" id="personal-out-symbolism">
+                Messages from celestial light.
+              </div>
+            </div>
+
+            <div class="meta-row">
+              <div class="meta-label">Origin</div>
+              <div class="meta-value" id="personal-out-origin">
+                Mediterranean Basin
+              </div>
+            </div>
+
+            <div class="meta-row">
+              <div class="meta-label">Reference</div>
+              <div class="meta-value" id="personal-out-line">
+                SPECIMEN 001
+              </div>
+            </div>
+
+          </div>
+
+          <p class="message personal-fit" id="personal-out-message">
+            Your name found its place in the Floréa herbarium.
+            This bloom reflects the quiet character carried by your name.
+          </p>
+
+          <div class="actions">
+            <button class="action" id="personal-again" type="button">
+              Choose Again
+            </button>
+
+            <button class="action" id="personal-back" type="button">
+              Return To Archive
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <footer class="footer">
+        <span>FLORÉA / DIGITAL BOTANICAL ARCHIVE</span>
+        <span>PERSONAL HERBARIUM / 02</span>
+      </footer>
+
+    </section>
+
+  </main>
+
+  <div class="return-hint">SCROLL UP · RETURN TO ARCHIVE</div>
+
+  <script>
+    (() => {
+      const flowers = [
+        {
+          name: "White Lily",
+          latin: "Lilium candidum",
+          emotion: "PURITY",
+          symbolism: "Purity, tranquil silence.",
+          origin: "Balkan Peninsula",
+          meaning: "Untouched innocence and serene stillness.",
+          specimen: "SPECIMEN 004",
+          image: "assets/images/flower-white.png"
+        },
+        {
+          name: "Macro Texture",
+          latin: "Cellula petalorum",
+          emotion: "WONDER",
+          symbolism: "Hidden depths.",
+          origin: "Optical Herbarium",
+          meaning: "The hidden microscopic universe within flower petals.",
+          specimen: "SPECIMEN 052",
+          image: "assets/images/flower-macro.png"
+        },
+        {
+          name: "Tulip",
+          latin: "Tulipa gesneriana",
+          emotion: "PERFECT LOVE",
+          symbolism: "Declaration of pure affection.",
+          origin: "Pamir Mountains",
+          meaning: "Noble passion and aristocratic grace.",
+          specimen: "SPECIMEN 003",
+          image: "assets/images/flower-tulip.png"
+        },
+        {
+          name: "Pressed Specimen",
+          latin: "Folia conservata",
+          emotion: "REMEMBRANCE",
+          symbolism: "Quiet reflection.",
+          origin: "Vault IV · Archive",
+          meaning: "Botanical memories preserved between linen parchment.",
+          specimen: "SPECIMEN 087",
+          image: "assets/images/flower-pressed.png"
+        },
+        {
+          name: "Sunflower",
+          latin: "Helianthus annuus",
+          emotion: "JOY",
+          symbolism: "Joyous illumination.",
+          origin: "High Plains",
+          meaning: "Radiant warmth and steadfast adoration toward light.",
+          specimen: "SPECIMEN 033",
+          image: "assets/images/flower-sunflower.png"
+        },
+        {
+          name: "Nocturne",
+          latin: "Flos nocturnus",
+          emotion: "MELANCHOLY",
+          symbolism: "Sacred melancholy.",
+          origin: "Alpine Woodland",
+          meaning: "Shadow companion to the radiant daylight bloom.",
+          specimen: "SPECIMEN 041",
+          image: "assets/images/flower-dark.png"
+        },
+        {
+          name: "Iris",
+          latin: "Iris germanica",
+          emotion: "WISDOM",
+          symbolism: "Messages from celestial light.",
+          origin: "Mediterranean Basin",
+          meaning: "Divine wisdom, profound faith, and quiet communication.",
+          specimen: "SPECIMEN 001",
+          image: "assets/images/flower-iris.png"
+        },
+        {
+          name: "Rose",
+          latin: "Rosa damascena",
+          emotion: "PASSION",
+          symbolism: "Passion guarded by truth.",
+          origin: "Levant & Persia",
+          meaning: "Sacred devotion and intense romantic longing.",
+          specimen: "SPECIMEN 021",
+          image: "assets/images/flower-rose.png"
+        },
+        {
+          name: "Cortex Radicis",
+          latin: "Substratum foliorum",
+          emotion: "ORIGIN",
+          symbolism: "Quiet perseverance.",
+          origin: "Alpine Biome",
+          meaning: "The ancient bedrock of soil, stone, and subterranean roots.",
+          specimen: "SPECIMEN 068-B",
+          image: "assets/images/flower-texture.png"
+        },
+        {
+          name: "Floréa Surrealis",
+          latin: "Floris chimerica",
+          emotion: "SUBLIME",
+          symbolism: "Eternal longing.",
+          origin: "Digital Herbarium",
+          meaning: "The ephemeral nature of memory and immortal grace.",
+          specimen: "SPECIMEN 002",
+          image: "assets/images/flower-hero.png"
+        },
+        {
+          name: "Botanical Substrate",
+          latin: "Substratum foliorum",
+          emotion: "ROOTEDNESS",
+          symbolism: "Endurance and regeneration.",
+          origin: "Boreal Conservatory",
+          meaning: "The quiet organic foundation of all botanical life.",
+          specimen: "SPECIMEN 068",
+          image: "assets/images/flower-texture.png"
+        },
+        {
+          name: "Umbra Somnium",
+          latin: "Flos nocturnus",
+          emotion: "SHADOW",
+          symbolism: "Restful oblivion.",
+          origin: "Subterranean Conservatory",
+          meaning: "The quiet void where roots take hold and dreams awaken.",
+          specimen: "SPECIMEN 042",
+          image: "assets/images/flower-dark.png"
+        },
+        {
+          name: "Rosa Gallica",
+          latin: "Rosa gallica",
+          emotion: "DEVOTION",
+          symbolism: "Unbroken dedication.",
+          origin: "Ancient Provence",
+          meaning: "A love so total and unwavering it leaves nothing withheld.",
+          specimen: "SPECIMEN 021-B",
+          image: "assets/images/flower-rose.png"
+        }
+      ];
+
+      const form = document.getElementById("name-form");
+      const input = document.getElementById("personal-name-input");
+      const hero = document.getElementById("hero");
+      const result = document.getElementById("personal-result");
+      const error = document.getElementById("name-error");
+
+      const outName = document.getElementById("personal-out-flower");
+      const outLatin = document.getElementById("personal-out-latin");
+      const outEmotion = document.getElementById("personal-out-emotion");
+      const outMeaning = document.getElementById("personal-out-meaning");
+      const outSymbolism = document.getElementById("personal-out-symbolism");
+      const outOrigin = document.getElementById("personal-out-origin");
+      const outSpecimen = document.getElementById("personal-out-specimen");
+      const outRef = document.getElementById("personal-flower-ref");
+      const outLine = document.getElementById("personal-out-line");
+      const outImage = document.getElementById("personal-flower-img");
+
+      function selectFlower(name) {
+        let hash = 0;
+
+        for (let i = 0; i < name.length; i++) {
+          hash = ((hash << 5) - hash) + name.charCodeAt(i);
+          hash |= 0;
+        }
+
+        return flowers[Math.abs(hash) % flowers.length];
+      }
+
+      function showResult(name) {
+        const flower = selectFlower(name);
+
+        outName.textContent = flower.name;
+        outLatin.textContent = flower.latin;
+        outEmotion.textContent = flower.emotion;
+        outMeaning.textContent = flower.meaning;
+        outSymbolism.textContent = flower.symbolism;
+        outOrigin.textContent = flower.origin;
+        outSpecimen.textContent = flower.specimen;
+        outRef.textContent = flower.specimen;
+        outLine.textContent = flower.specimen;
+        outImage.src = flower.image;
+        outImage.alt = flower.name;
+
+        result.classList.add("is-visible");
+
+        requestAnimationFrame(() => {
+          result.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        });
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const name = input.value.trim();
+
+        if (!name) {
+          error.style.display = "block";
+          input.focus();
+          return;
+        }
+
+        error.style.display = "none";
+        showResult(name);
+      });
+
+      input.addEventListener("input", () => {
+        error.style.display = "none";
+      });
+
+      document.getElementById("personal-again").addEventListener("click", () => {
+        result.classList.remove("is-visible");
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+
+        setTimeout(() => {
+          input.focus();
+        }, 500);
+      });
+
+      document.getElementById("personal-back").addEventListener("click", () => {
+        window.parent.postMessage({
+          type: "FLOREA_RETURN_ARCHIVE"
+        }, "*");
+      });
+
+      window.addEventListener("wheel", (event) => {
+        if (event.deltaY < -55 && window.scrollY <= 5) {
+          window.parent.postMessage({
+            type: "FLOREA_RETURN_ARCHIVE"
+          }, "*");
+        }
+      }, { passive: true });
+
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          window.parent.postMessage({
+            type: "FLOREA_RETURN_ARCHIVE"
+          }, "*");
+        }
+      });
+
+    })();
+  </script>
+
+
+<script>
+(() => {
+  let lastWheel = 0;
+
+  window.addEventListener("wheel", event => {
+    const now = performance.now();
+
+    if (now - lastWheel < 100) return;
+    lastWheel = now;
+
+    const scrollTop =
+      window.scrollY ||
+      document.documentElement.scrollTop ||
+      document.body.scrollTop ||
+      0;
+
+    const viewport = window.innerHeight;
+
+    const height = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    );
+
+    const atTop = scrollTop <= 8;
+    const atBottom =
+      scrollTop + viewport >= height - 14;
+
+    if (event.deltaY > 0 && atBottom) {
+      window.parent.postMessage(
+        { type: "FLOREA_TAB2_NEXT" },
+        "*"
+      );
+    }
+
+    if (event.deltaY < 0 && atTop) {
+      window.parent.postMessage(
+        { type: "FLOREA_TAB2_PREVIOUS" },
+        "*"
+      );
+    }
+  }, { passive: true });
+
+  window.addEventListener("message", event => {
+    if (event.data?.type === "FLOREA_TAB2_FOCUS_TOP") {
+      window.scrollTo(0, 0);
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
