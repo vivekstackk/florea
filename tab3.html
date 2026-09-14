@@ -113,28 +113,30 @@
       .florea-tab3-frame {
         position: fixed;
         inset: 0;
-        z-index: 90;
+        z-index: 900;
         width: 100vw;
         height: 100vh;
         height: 100dvh;
+        min-height: 100vh;
         border: 0;
-        display: block;
+        display: block !important;
         background: #f5f3ee;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        transform: translateY(100%);
+        transform: translate3d(0,100%,0);
         transition:
           transform 0.95s cubic-bezier(.77,0,.18,1),
           opacity 0.45s ease,
           visibility 0s linear 0.95s;
+        isolation: isolate;
       }
 
       .florea-tab3-frame.is-visible {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
-        transform: translateY(0);
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transform: translate3d(0,0,0) !important;
         transition:
           transform 0.95s cubic-bezier(.77,0,.18,1),
           opacity 0.45s ease;
@@ -146,6 +148,85 @@
         }
       }
 
+
+      /* =========================================================
+         MOBILE — KEEP NAV + MAKE PAGE TRANSITIONS TOUCH FRIENDLY
+         ========================================================= */
+      @media (max-width: 768px) {
+        html, body {
+          width: 100%;
+          max-width: 100%;
+          overflow-x: hidden;
+        }
+
+        .header {
+          height: 58px;
+          z-index: 1200;
+          justify-content: flex-end;
+          padding: 0 12px;
+        }
+
+        .header__logo {
+          left: 18px;
+          font-size: 14px;
+          z-index: 1201;
+        }
+
+        .header__nav {
+          display: flex !important;
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          gap: 1px;
+          padding: 3px;
+          z-index: 1201;
+        }
+
+        .header__nav a {
+          display: block !important;
+          padding: 7px 9px;
+          font-size: 8px;
+          min-width: 26px;
+          text-align: center;
+        }
+
+        #nav-home {
+          display: none !important;
+        }
+
+        .florea-tab2-frame,
+        .florea-tab3-frame {
+          width: 100vw;
+          height: 100dvh;
+          min-height: 100vh;
+        }
+
+        .florea-tab3-frame {
+          z-index: 900;
+        }
+
+        .music-toggle {
+          z-index: 1300;
+          right: 12px;
+          bottom: 12px;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .header__logo {
+          left: 14px;
+          font-size: 13px;
+        }
+
+        .header__nav {
+          right: 7px;
+        }
+
+        .header__nav a {
+          padding: 6px 7px;
+          min-width: 24px;
+        }
+      }
     </style>
 </head>
 <body>
@@ -546,13 +627,15 @@
       link?.classList.add("is-active");
     }
 
-    function transitionLock() {
+    function transitionLock(duration = 950) {
       locked = true;
-      setTimeout(() => locked = false, 900);
+      setTimeout(() => {
+        locked = false;
+      }, duration);
     }
 
     function page1() {
-      if (locked) return;
+      if (locked && page !== 1) return;
 
       page = 1;
 
@@ -587,10 +670,12 @@
 
       active(nav2);
 
-      tab2.contentWindow?.postMessage(
-        { type: "FLOREA_TAB2_FOCUS_TOP" },
-        "*"
-      );
+      requestAnimationFrame(() => {
+        tab2.contentWindow?.postMessage(
+          { type: "FLOREA_TAB2_FOCUS_TOP" },
+          "*"
+        );
+      });
     }
 
     function page3() {
@@ -602,6 +687,7 @@
       tab2.classList.remove("is-visible");
       tab2.setAttribute("aria-hidden", "true");
 
+      /* Remove every possible hidden state before showing Tab 3. */
       tab3.classList.add("is-visible");
       tab3.setAttribute("aria-hidden", "false");
 
@@ -610,12 +696,27 @@
 
       active(nav3);
 
-      tab3.contentWindow?.postMessage(
-        { type: "FLOREA_TAB3_FOCUS_TOP" },
-        "*"
-      );
+      requestAnimationFrame(() => {
+        tab3.contentWindow?.postMessage(
+          { type: "FLOREA_TAB3_FOCUS_TOP" },
+          "*"
+        );
+
+        /* Recalculate the iframe after it becomes visible. */
+        setTimeout(() => {
+          try {
+            tab3.contentWindow?.postMessage(
+              { type: "FLOREA_TAB3_FOCUS_TOP" },
+              "*"
+            );
+          } catch (_) {}
+        }, 250);
+      });
     }
 
+    /* ---------------------------------------------------------
+       HEADER NAVIGATION
+       --------------------------------------------------------- */
     nav1?.addEventListener("click", e => {
       e.preventDefault();
       e.stopImmediatePropagation();
@@ -634,15 +735,10 @@
       page3();
     }, true);
 
-    /*
-      PAGE 1 → PAGE 2
-
-      The normal wheel handler inside main.js continues
-      rotating the flower gallery.
-
-      Only a downward wheel at the extreme left/right
-      edge changes the page.
-    */
+    /* ---------------------------------------------------------
+       DESKTOP:
+       Tab 1 -> Tab 2 only when wheel-down starts at screen edge.
+       --------------------------------------------------------- */
     window.addEventListener("wheel", e => {
       if (page !== 1 || locked) return;
 
@@ -681,10 +777,62 @@
       capture: true
     });
 
-    /*
-      TAB 2 → TAB 3 and TAB 2 → TAB 1
-      are sent from tab2.html.
-    */
+    /* ---------------------------------------------------------
+       MOBILE:
+       Swipe UP   = next page
+       Swipe DOWN = previous page
+
+       This is attached to the parent archive only.
+       Tab 2 / Tab 3 keep their own internal scrolling.
+       --------------------------------------------------------- */
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    window.addEventListener("touchstart", e => {
+      if (e.touches.length !== 1) return;
+
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchStartTime = Date.now();
+    }, { passive: true, capture: true });
+
+    window.addEventListener("touchend", e => {
+      if (e.changedTouches.length !== 1) return;
+      if (locked) return;
+
+      const touch = e.changedTouches[0];
+
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      const elapsed = Date.now() - touchStartTime;
+
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+
+      /* Tap / tiny movement */
+      if (absY < 65) return;
+
+      /* Horizontal gesture */
+      if (absY < absX * 1.2) return;
+
+      /* Very slow gesture */
+      if (elapsed > 1300) return;
+
+      if (dy < -65) {
+        /* Swipe UP */
+        if (page === 1) page2();
+        else if (page === 2) page3();
+      } else if (dy > 65) {
+        /* Swipe DOWN */
+        if (page === 3) page2();
+        else if (page === 2) page1();
+      }
+    }, { passive: true, capture: true });
+
+    /* ---------------------------------------------------------
+       MESSAGE BRIDGE
+       --------------------------------------------------------- */
     window.addEventListener("message", e => {
       const type = e.data?.type;
 
@@ -705,6 +853,9 @@
       }
     });
 
+    /* ---------------------------------------------------------
+       KEYBOARD
+       --------------------------------------------------------- */
     window.addEventListener("keydown", e => {
       if (e.key !== "Escape") return;
 
@@ -712,15 +863,20 @@
       else if (page === 2) page1();
     });
 
+    /* ---------------------------------------------------------
+       GLOBAL API
+       --------------------------------------------------------- */
     window.FLOREA_SHOW_PAGE = target => {
       if (target === 1) page1();
       if (target === 2) page2();
       if (target === 3) page3();
     };
 
+    /* Initial state */
     active(nav1);
   })();
   </script>
+
 
   <script src="js/main.js"></script>
 
