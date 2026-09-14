@@ -9,16 +9,235 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+    <style>
+      html.florea-tab2-open,
+      html.florea-tab2-open body {
+        overflow: hidden !important;
+      }
+
+      .florea-tab2-frame {
+        position: fixed;
+        inset: 0;
+        z-index: 80;
+        width: 100vw;
+        height: 100vh;
+        border: 0;
+        display: block;
+        background: #f5f3ee;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(100%);
+        transition:
+          transform 0.9s cubic-bezier(.77,0,.18,1),
+          opacity 0.45s ease,
+          visibility 0s linear 0.9s;
+      }
+
+      .florea-tab2-frame.is-visible {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0);
+        transition:
+          transform 0.9s cubic-bezier(.77,0,.18,1),
+          opacity 0.45s ease;
+      }
+
+      @media (max-width: 768px) {
+        .florea-tab2-frame {
+          height: 100dvh;
+        }
+      }
+    
+
+      .music-toggle {
+        position: fixed;
+        right: 28px;
+        bottom: 26px;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 12px;
+        border: 1px solid rgba(17,17,15,.14);
+        background: rgba(245,243,238,.78);
+        color: #11110f;
+        font-family: "DM Mono", monospace;
+        font-size: 8px;
+        font-weight: 400;
+        letter-spacing: .18em;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: transform .3s ease, background .3s ease, border-color .3s ease;
+      }
+
+      .music-toggle:hover {
+        transform: translateY(-2px);
+        background: rgba(255,255,255,.92);
+        border-color: rgba(17,17,15,.28);
+      }
+
+      .music-toggle__icon {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 15px;
+        line-height: 1;
+      }
+
+      .music-toggle.is-playing .music-toggle__icon {
+        animation: floreaMusicPulse 1.4s ease-in-out infinite;
+      }
+
+      @keyframes floreaMusicPulse {
+        0%, 100% { transform: scale(1); opacity: .55; }
+        50% { transform: scale(1.22); opacity: 1; }
+      }
+
+      @media (max-width: 768px) {
+        .music-toggle {
+          right: 16px;
+          bottom: 16px;
+        }
+      }
+
+      /* =========================================================
+         TAB 3 — FULL-SCREEN MOTION HERBARIUM
+         ========================================================= */
+
+      html.florea-tab3-open,
+      html.florea-tab3-open body {
+        overflow: hidden !important;
+      }
+
+      .florea-tab3-frame {
+        position: fixed;
+        inset: 0;
+        z-index: 900;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        min-height: 100vh;
+        border: 0;
+        display: block !important;
+        background: #f5f3ee;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translate3d(0,100%,0);
+        transition:
+          transform 0.95s cubic-bezier(.77,0,.18,1),
+          opacity 0.45s ease,
+          visibility 0s linear 0.95s;
+        isolation: isolate;
+      }
+
+      .florea-tab3-frame.is-visible {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transform: translate3d(0,0,0) !important;
+        transition:
+          transform 0.95s cubic-bezier(.77,0,.18,1),
+          opacity 0.45s ease;
+      }
+
+      @media (max-width: 768px) {
+        .florea-tab3-frame {
+          height: 100dvh;
+        }
+      }
+
+
+      /* =========================================================
+         MOBILE — KEEP NAV + MAKE PAGE TRANSITIONS TOUCH FRIENDLY
+         ========================================================= */
+      @media (max-width: 768px) {
+        html, body {
+          width: 100%;
+          max-width: 100%;
+          overflow-x: hidden;
+        }
+
+        .header {
+          height: 58px;
+          z-index: 1200;
+          justify-content: flex-end;
+          padding: 0 12px;
+        }
+
+        .header__logo {
+          left: 18px;
+          font-size: 14px;
+          z-index: 1201;
+        }
+
+        .header__nav {
+          display: flex !important;
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          gap: 1px;
+          padding: 3px;
+          z-index: 1201;
+        }
+
+        .header__nav a {
+          display: block !important;
+          padding: 7px 9px;
+          font-size: 8px;
+          min-width: 26px;
+          text-align: center;
+        }
+
+        #nav-home {
+          display: none !important;
+        }
+
+        .florea-tab2-frame,
+        .florea-tab3-frame {
+          width: 100vw;
+          height: 100dvh;
+          min-height: 100vh;
+        }
+
+        .florea-tab3-frame {
+          z-index: 900;
+        }
+
+        .music-toggle {
+          z-index: 1300;
+          right: 12px;
+          bottom: 12px;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .header__logo {
+          left: 14px;
+          font-size: 13px;
+        }
+
+        .header__nav {
+          right: 7px;
+        }
+
+        .header__nav a {
+          padding: 6px 7px;
+          min-width: 24px;
+        }
+      }
+    </style>
 </head>
 <body>
-
+​
   <canvas id="ambient-canvas" class="ambient-canvas" aria-hidden="true"></canvas>
-
+​
   <div class="cursor" id="cursor" aria-hidden="true">
     <div class="cursor__reticle"></div>
     <div class="cursor__dot"></div>
   </div>
-
+​
   <header class="header">
     <div class="header__logo">FLORÉA</div>
     <nav class="header__nav" aria-label="Archive navigation">
@@ -28,14 +247,14 @@
       <a href="#" data-page="3">3</a>
     </nav>
   </header>
-
+​
   <!-- ==================== VERTICAL 3D SPATIAL ARCHIVE ==================== -->
   <main class="canvas-viewport is-entering" id="canvas-viewport">
     <div class="gallery-scene" id="gallery-scene">
-
+​
       <!-- 01: Top-left accent -->
       <article class="card card--white"
-               style="width:110px;height:140px"
+               style="width:96px;height:96px"
                data-x="-220" data-y="-280" data-z="-60"
                data-scale="1.0"
                data-name="White Lily" data-latin="Lilium candidum" data-emotion="PURITY"
@@ -44,10 +263,10 @@
                data-origin="Balkan Peninsula" data-specimen="SPECIMEN 004" data-image="assets/images/flower-white.png">
         <img src="assets/images/flower-white.png" alt="White Lily" class="card-img">
       </article>
-
+​
       <!-- 02: Top-center -->
       <article class="card card--gray"
-               style="width:110px;height:140px"
+               style="width:96px;height:96px"
                data-x="60" data-y="-300" data-z="40"
                data-scale="1.0"
                data-name="Macro Texture" data-latin="Cellula petalorum" data-emotion="WONDER"
@@ -56,10 +275,10 @@
                data-origin="Optical Herbarium" data-specimen="SPECIMEN 052" data-image="assets/images/flower-macro.png">
         <img src="assets/images/flower-macro.png" alt="Macro Texture" class="card-img">
       </article>
-
+​
       <!-- 03: Upper-right -->
       <article class="card card--pink"
-               style="width:110px;height:140px"
+               style="width:96px;height:96px"
                data-x="280" data-y="-240" data-z="-90"
                data-scale="1.0"
                data-name="Tulip" data-latin="Tulipa gesneriana" data-emotion="PERFECT LOVE"
@@ -68,10 +287,10 @@
                data-origin="Pamir Mountains" data-specimen="SPECIMEN 003" data-image="assets/images/flower-tulip.png">
         <img src="assets/images/flower-tulip.png" alt="Tulip" class="card-img">
       </article>
-
+​
       <!-- 04: Mid-left -->
       <article class="card card--white"
-               style="width:110px;height:140px"
+               style="width:96px;height:96px"
                data-x="-310" data-y="-120" data-z="80"
                data-scale="1.0"
                data-name="Pressed Specimen" data-latin="Folia conservata" data-emotion="REMEMBRANCE"
@@ -80,10 +299,10 @@
                data-origin="Vault IV · Archive" data-specimen="SPECIMEN 087" data-image="assets/images/flower-pressed.png">
         <img src="assets/images/flower-pressed.png" alt="Pressed Specimen" class="card-img">
       </article>
-
+​
       <!-- 05: Mid-center-left -->
       <article class="card card--white"
-               style="width:110px;height:140px"
+               style="width:96px;height:96px"
                data-x="-100" data-y="-150" data-z="-120"
                data-scale="1.0"
                data-name="Sunflower" data-latin="Helianthus annuus" data-emotion="JOY"
@@ -92,10 +311,10 @@
                data-origin="High Plains" data-specimen="SPECIMEN 033" data-image="assets/images/flower-sunflower.png">
         <img src="assets/images/flower-sunflower.png" alt="Sunflower" class="card-img">
       </article>
-
+​
       <!-- 06: Mid-center-right -->
       <article class="card card--black"
-               style="width:110px;height:140px"
+               style="width:96px;height:96px"
                data-x="180" data-y="-100" data-z="60"
                data-scale="1.0"
                data-name="Nocturne" data-latin="Flos nocturnus" data-emotion="MELANCHOLY"
@@ -104,10 +323,10 @@
                data-origin="Alpine Woodland" data-specimen="SPECIMEN 041" data-image="assets/images/flower-dark.png">
         <img src="assets/images/flower-dark.png" alt="Nocturne" class="card-img">
       </article>
-
+​
       <!-- 07: CENTER HERO -->
       <article class="card card--white card--hero"
-               style="width:110px;height:140px"
+               style="width:96px;height:96px"
                data-x="20" data-y="-20" data-z="140"
                data-scale="1.0"
                data-name="Iris" data-latin="Iris germanica" data-emotion="WISDOM"
@@ -116,10 +335,10 @@
                data-origin="Mediterranean Basin" data-specimen="SPECIMEN 001" data-image="assets/images/flower-iris.png">
         <img src="assets/images/flower-iris.png" alt="Iris" class="card-img">
       </article>
-
+​
       <!-- 08: Center-left -->
       <article class="card card--slate"
-               style="width:110px;height:140px"
+               style="width:96px;height:96px"
                data-x="-200" data-y="40" data-z="-40"
                data-scale="1.0"
                data-name="Rose" data-latin="Rosa damascena" data-emotion="PASSION"
@@ -128,10 +347,10 @@
                data-origin="Levant &amp; Persia" data-specimen="SPECIMEN 021" data-image="assets/images/flower-rose.png">
         <img src="assets/images/flower-rose.png" alt="Rose" class="card-img">
       </article>
-
+​
       <!-- 09: Center-right -->
       <article class="card card--white"
-               style="width:110px;height:140px"
+               style="width:96px;height:96px"
                data-x="300" data-y="20" data-z="-100"
                data-scale="1.0"
                data-name="Cortex Radicis" data-latin="Substratum foliorum" data-emotion="ORIGIN"
@@ -140,10 +359,10 @@
                data-origin="Alpine Biome" data-specimen="SPECIMEN 068-B" data-image="assets/images/flower-texture.png">
         <img src="assets/images/flower-texture.png" alt="Cortex Radicis" class="card-img">
       </article>
-
+​
       <!-- 10: Lower-left -->
       <article class="card card--white"
-               style="width:110px;height:140px"
+               style="width:96px;height:96px"
                data-x="-140" data-y="150" data-z="100"
                data-scale="1.0"
                data-name="Floréa Surrealis" data-latin="Floris chimerica" data-emotion="SUBLIME"
@@ -152,10 +371,10 @@
                data-origin="Digital Herbarium" data-specimen="SPECIMEN 002" data-image="assets/images/flower-hero.png">
         <img src="assets/images/flower-hero.png" alt="Floréa Surrealis" class="card-img">
       </article>
-
+​
       <!-- 11: Lower-center-right -->
       <article class="card card--darkgreen"
-               style="width:110px;height:140px"
+               style="width:96px;height:96px"
                data-x="140" data-y="170" data-z="-50"
                data-scale="1.0"
                data-name="Botanical Substrate" data-latin="Substratum foliorum" data-emotion="ROOTEDNESS"
@@ -164,10 +383,10 @@
                data-origin="Boreal Conservatory" data-specimen="SPECIMEN 068" data-image="assets/images/flower-texture.png">
         <img src="assets/images/flower-texture.png" alt="Botanical Substrate" class="card-img">
       </article>
-
+​
       <!-- 12: Bottom-left -->
       <article class="card card--black"
-               style="width:110px;height:140px"
+               style="width:96px;height:96px"
                data-x="-260" data-y="260" data-z="-70"
                data-scale="1.0"
                data-name="Umbra Somnium" data-latin="Flos nocturnus" data-emotion="SHADOW"
@@ -176,10 +395,10 @@
                data-origin="Subterranean Conservatory" data-specimen="SPECIMEN 042" data-image="assets/images/flower-dark.png">
         <img src="assets/images/flower-dark.png" alt="Umbra Somnium" class="card-img">
       </article>
-
+​
       <!-- 13: Bottom-center -->
       <article class="card card--black"
-               style="width:110px;height:140px"
+               style="width:96px;height:96px"
                data-x="50" data-y="290" data-z="70"
                data-scale="1.0"
                data-name="Rosa Gallica" data-latin="Rosa gallica" data-emotion="DEVOTION"
@@ -188,17 +407,17 @@
                data-origin="Ancient Provence" data-specimen="SPECIMEN 021-B" data-image="assets/images/flower-rose.png">
         <img src="assets/images/flower-rose.png" alt="Rosa Gallica" class="card-img">
       </article>
-
+​
     </div>
   
   </main>
-
+​
   <!-- ==================== EXHIBITION FOOTER ==================== -->
   <footer class="archive-footer" aria-hidden="true">
     <span class="archive-footer__brand">FLORÉA</span>
     <span class="archive-footer__tag">Botanical Archive</span>
   </footer>
-
+​
   <!-- ==================== DETAIL OVERLAY ==================== -->
   <aside class="detail-overlay" id="detail-overlay" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="detail-panel">
@@ -238,8 +457,509 @@
       </div>
     </div>
   </aside>
+​
+​
+  <!-- ==================== TAB 2 · EXTERNAL EXPERIENCE ==================== -->
+  <iframe
+    id="florea-tab2"
+    class="florea-tab2-frame"
+    src="./tab2.html"
+    title="Your Flower"
+    aria-hidden="true">
+  </iframe>
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <!-- ==================== TAB 3 · SCROLL FRAME EXPERIENCE ==================== -->
+  <iframe
+    id="florea-tab3"
+    class="florea-tab3-frame"
+    src="./tab3.html"
+    title="Floréa Motion Herbarium"
+    aria-hidden="true">
+  </iframe>
+  <!-- ==================== AMBIENT MUSIC ==================== -->
+
+  <audio
+    id="florea-music"
+    autoplay
+    loop
+    preload="auto"
+  >
+    <source src="assets/music/Baagay.mp3" type="audio/mpeg">
+  </audio>
+
+  <button
+    class="music-toggle is-playing"
+    id="music-toggle"
+    type="button"
+    aria-label="Turn ambient music off"
+  >
+    <span class="music-toggle__icon">♪</span>
+    <span class="music-toggle__text">SOUND ON</span>
+  </button>
+
+  <script>
+  (() => {
+    const music = document.getElementById("florea-music");
+    const toggle = document.getElementById("music-toggle");
+
+    if (!music || !toggle) return;
+
+    const text = toggle.querySelector(".music-toggle__text");
+    const VOLUME = 1.0;
+
+    let playing = false;
+    let userTurnedOff = false;
+
+    music.volume = VOLUME;
+
+    function updateUI() {
+      toggle.classList.toggle("is-playing", playing);
+      text.textContent = playing ? "SOUND ON" : "SOUND OFF";
+      toggle.setAttribute(
+        "aria-label",
+        playing ? "Turn ambient music off" : "Turn ambient music on"
+      );
+    }
+
+    async function startMusic() {
+      if (userTurnedOff) return;
+
+      try {
+        music.volume = VOLUME;
+        music.currentTime = 0;
+        await music.play();
+
+        playing = true;
+        updateUI();
+      } catch (error) {
+        playing = false;
+        updateUI();
+      }
+    }
+
+    function stopMusic() {
+      music.pause();
+      playing = false;
+      userTurnedOff = true;
+      updateUI();
+    }
+
+    music.addEventListener("loadedmetadata", () => {
+      music.volume = VOLUME;
+      music.currentTime = 0;
+    });
+
+    music.addEventListener("play", () => {
+      playing = true;
+      updateUI();
+    });
+
+    music.addEventListener("pause", () => {
+      playing = false;
+      updateUI();
+    });
+
+    toggle.addEventListener("click", async (event) => {
+      event.stopPropagation();
+
+      if (playing) {
+        stopMusic();
+      } else {
+        userTurnedOff = false;
+        music.currentTime = 0;
+        music.volume = VOLUME;
+        await startMusic();
+      }
+    });
+
+    // Default ON. The browser may block audible autoplay.
+    window.addEventListener("load", () => {
+      music.volume = VOLUME;
+      music.currentTime = 0;
+      startMusic();
+    });
+
+    // If autoplay is blocked, the first user interaction starts it.
+    function unlockMusic() {
+      if (!playing && !userTurnedOff) {
+        music.currentTime = 0;
+        music.volume = VOLUME;
+        startMusic();
+      }
+
+      document.removeEventListener("pointerdown", unlockMusic);
+      document.removeEventListener("keydown", unlockMusic);
+      document.removeEventListener("wheel", unlockMusic);
+      document.removeEventListener("touchstart", unlockMusic);
+    }
+
+    document.addEventListener("pointerdown", unlockMusic, { passive: true });
+    document.addEventListener("keydown", unlockMusic);
+    document.addEventListener("wheel", unlockMusic, { passive: true });
+    document.addEventListener("touchstart", unlockMusic, { passive: true });
+
+    updateUI();
+  })();
+  </script>
+
+​
+
+  <!-- ==================== THREE-PAGE NAVIGATION ==================== -->
+  <script>
+  (() => {
+    const tab2 = document.getElementById("florea-tab2");
+    const tab3 = document.getElementById("florea-tab3");
+
+    const nav1 = document.querySelector('[data-page="1"]');
+    const nav2 = document.querySelector('[data-page="2"]');
+    const nav3 = document.querySelector('[data-page="3"]');
+
+    if (!tab2 || !tab3) return;
+
+    let page = 1;
+    let locked = false;
+    let edgeWheel = 0;
+
+    function active(link) {
+      document.querySelectorAll(".header__nav a").forEach(a => {
+        a.classList.remove("is-active");
+      });
+      link?.classList.add("is-active");
+    }
+
+    function transitionLock(duration = 950) {
+      locked = true;
+      setTimeout(() => {
+        locked = false;
+      }, duration);
+    }
+
+    function page1(force = false) {
+      if (!force && locked && page !== 1) return;
+
+      page = 1;
+
+      tab2.classList.remove("is-visible");
+      tab3.classList.remove("is-visible");
+
+      tab2.setAttribute("aria-hidden", "true");
+      tab3.setAttribute("aria-hidden", "true");
+
+      /* Hard-hide both experience frames. */
+      tab2.style.setProperty("visibility", "hidden", "important");
+      tab2.style.setProperty("opacity", "0", "important");
+      tab2.style.setProperty("pointer-events", "none", "important");
+      tab3.style.setProperty("visibility", "hidden", "important");
+      tab3.style.setProperty("opacity", "0", "important");
+      tab3.style.setProperty("pointer-events", "none", "important");
+
+      document.documentElement.classList.remove(
+        "florea-tab2-open",
+        "florea-tab3-open"
+      );
+
+      /* Restore archive immediately. */
+      const archive = document.getElementById("canvas-viewport");
+      const ambient = document.getElementById("ambient-canvas");
+      const footer = document.querySelector(".archive-footer");
+
+      [archive, ambient, footer].forEach(el => {
+        if (!el) return;
+        el.style.removeProperty("visibility");
+        el.style.removeProperty("opacity");
+        el.style.removeProperty("pointer-events");
+      });
+
+      active(nav1);
+    }
+
+    function page2(force = false) {
+      if (page === 2) return;
+      if (!force && locked) return;
+
+      page = 2;
+      transitionLock();
+
+      tab3.classList.remove("is-visible");
+      tab3.setAttribute("aria-hidden", "true");
+
+      tab3.style.setProperty("visibility", "hidden", "important");
+      tab3.style.setProperty("opacity", "0", "important");
+      tab3.style.setProperty("pointer-events", "none", "important");
+
+      tab2.classList.add("is-visible");
+      tab2.setAttribute("aria-hidden", "false");
+
+      document.documentElement.classList.remove("florea-tab3-open");
+      document.documentElement.classList.add("florea-tab2-open");
+
+      /* Hide Tab 1 and force Tab 2 on top. */
+      const archive = document.getElementById("canvas-viewport");
+      const ambient = document.getElementById("ambient-canvas");
+
+      [archive, ambient].forEach(el => {
+        if (!el) return;
+        el.style.setProperty("visibility", "hidden", "important");
+        el.style.setProperty("opacity", "0", "important");
+        el.style.setProperty("pointer-events", "none", "important");
+      });
+
+      tab2.style.setProperty("visibility", "visible", "important");
+      tab2.style.setProperty("opacity", "1", "important");
+      tab2.style.setProperty("pointer-events", "auto", "important");
+      tab2.style.setProperty("transform", "translateY(0)", "important");
+      tab2.style.setProperty("z-index", "99998", "important");
+
+      active(nav2);
+
+      requestAnimationFrame(() => {
+        try {
+          tab2.contentWindow?.postMessage(
+            { type: "FLOREA_TAB2_FOCUS_TOP" },
+            "*"
+          );
+        } catch (_) {}
+      });
+    }
+
+    function page3(force = false) {
+      if (page === 3) return;
+      if (!force && locked) return;
+
+      page = 3;
+      transitionLock();
+
+      tab2.classList.remove("is-visible");
+      tab2.setAttribute("aria-hidden", "true");
+
+      tab2.style.setProperty("visibility", "hidden", "important");
+      tab2.style.setProperty("opacity", "0", "important");
+      tab2.style.setProperty("pointer-events", "none", "important");
+
+      /* Tab 3 becomes the ONLY visible experience. */
+      document.documentElement.classList.remove("florea-tab2-open");
+      document.documentElement.classList.add("florea-tab3-open");
+
+      const archive = document.getElementById("canvas-viewport");
+      const ambient = document.getElementById("ambient-canvas");
+      const footer = document.querySelector(".archive-footer");
+
+      [archive, ambient, footer].forEach(el => {
+        if (!el) return;
+        el.style.setProperty("visibility", "hidden", "important");
+        el.style.setProperty("opacity", "0", "important");
+        el.style.setProperty("pointer-events", "none", "important");
+      });
+
+      tab3.classList.add("is-visible");
+      tab3.setAttribute("aria-hidden", "false");
+
+      /* Hard force Tab 3 visible. This prevents any external CSS
+         from leaving the iframe underneath the archive. */
+      tab3.style.setProperty("position", "fixed", "important");
+      tab3.style.setProperty("inset", "0", "important");
+      tab3.style.setProperty("width", "100vw", "important");
+      tab3.style.setProperty("height", "100vh", "important");
+      tab3.style.setProperty("height", "100dvh", "important");
+      tab3.style.setProperty("display", "block", "important");
+      tab3.style.setProperty("visibility", "visible", "important");
+      tab3.style.setProperty("opacity", "1", "important");
+      tab3.style.setProperty("pointer-events", "auto", "important");
+      tab3.style.setProperty("transform", "none", "important");
+      tab3.style.setProperty("z-index", "99999", "important");
+      tab3.style.setProperty("border", "0", "important");
+      tab3.style.setProperty("background", "#f5f3ee", "important");
+
+      active(nav3);
+
+      const focusTab3 = () => {
+        try {
+          tab3.contentWindow?.postMessage(
+            { type: "FLOREA_TAB3_FOCUS_TOP" },
+            "*"
+          );
+        } catch (_) {}
+
+        try {
+          tab3.contentWindow?.scrollTo(0, 0);
+        } catch (_) {}
+      };
+
+      /* If Tab 3 has not loaded yet, focus after load. */
+      if (tab3.contentDocument?.readyState === "complete") {
+        requestAnimationFrame(focusTab3);
+      } else {
+        tab3.addEventListener("load", focusTab3, { once: true });
+      }
+
+      setTimeout(focusTab3, 100);
+      setTimeout(focusTab3, 500);
+    }
+
+    /* ---------------------------------------------------------
+       HEADER NAVIGATION
+       --------------------------------------------------------- */
+    nav1?.addEventListener("click", e => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      page1(true);
+    }, true);
+
+    nav2?.addEventListener("click", e => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      page2(true);
+    }, true);
+
+    nav3?.addEventListener("click", e => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      page3(true);
+    }, true);
+
+    /* ---------------------------------------------------------
+       DESKTOP:
+       Tab 1 -> Tab 2 only when wheel-down starts at screen edge.
+       --------------------------------------------------------- */
+    window.addEventListener("wheel", e => {
+      if (page !== 1 || locked) return;
+
+      const width = Math.max(window.innerWidth, 1);
+      const edge = Math.min(180, Math.max(90, width * 0.14));
+
+      const atEdge =
+        e.clientX <= edge ||
+        e.clientX >= width - edge;
+
+      if (!atEdge) {
+        edgeWheel = 0;
+        return;
+      }
+
+      const vertical =
+        Math.abs(e.deltaY) >= Math.abs(e.deltaX) * 0.8;
+
+      if (!vertical || e.deltaY <= 0) {
+        edgeWheel = 0;
+        return;
+      }
+
+      edgeWheel += e.deltaY;
+
+      if (edgeWheel >= 120) {
+        edgeWheel = 0;
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        page2(true);
+      }
+    }, {
+      passive: false,
+      capture: true
+    });
+
+    /* ---------------------------------------------------------
+       MOBILE:
+       Swipe UP   = next page
+       Swipe DOWN = previous page
+
+       This is attached to the parent archive only.
+       Tab 2 / Tab 3 keep their own internal scrolling.
+       --------------------------------------------------------- */
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    window.addEventListener("touchstart", e => {
+      if (e.touches.length !== 1) return;
+
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchStartTime = Date.now();
+    }, { passive: true, capture: true });
+
+    window.addEventListener("touchend", e => {
+      if (e.changedTouches.length !== 1) return;
+      if (locked) return;
+
+      const touch = e.changedTouches[0];
+
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      const elapsed = Date.now() - touchStartTime;
+
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+
+      /* Tap / tiny movement */
+      if (absY < 65) return;
+
+      /* Horizontal gesture */
+      if (absY < absX * 1.2) return;
+
+      /* Very slow gesture */
+      if (elapsed > 1300) return;
+
+      if (dy < -65) {
+        /* Swipe UP */
+        if (page === 1) page2();
+        else if (page === 2) page3();
+      } else if (dy > 65) {
+        /* Swipe DOWN */
+        if (page === 3) page2();
+        else if (page === 2) page1();
+      }
+    }, { passive: true, capture: true });
+
+    /* ---------------------------------------------------------
+       MESSAGE BRIDGE
+       --------------------------------------------------------- */
+    window.addEventListener("message", e => {
+      const type = e.data?.type;
+
+      if (type === "FLOREA_TAB2_NEXT") {
+        page3();
+      }
+
+      if (type === "FLOREA_TAB2_PREVIOUS") {
+        page1();
+      }
+
+      if (type === "FLOREA_TAB3_PREVIOUS") {
+        page2();
+      }
+
+      if (type === "FLOREA_RETURN_ARCHIVE") {
+        page1();
+      }
+    });
+
+    /* ---------------------------------------------------------
+       KEYBOARD
+       --------------------------------------------------------- */
+    window.addEventListener("keydown", e => {
+      if (e.key !== "Escape") return;
+
+      if (page === 3) page2();
+      else if (page === 2) page1();
+    });
+
+    /* ---------------------------------------------------------
+       GLOBAL API
+       --------------------------------------------------------- */
+    window.FLOREA_SHOW_PAGE = target => {
+      if (target === 1) page1();
+      if (target === 2) page2();
+      if (target === 3) page3();
+    };
+
+    /* Initial state */
+    active(nav1);
+  })();
+  </script>
+
+
   <script src="js/main.js"></script>
 
 </body>
