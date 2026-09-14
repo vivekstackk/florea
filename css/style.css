@@ -1302,3 +1302,128 @@ html.florea-personal-mode .florea-personal-page * {
     line-height: 1.15;
   }
 }
+
+/* ==========================================================
+   FINAL MOBILE DETAIL PANEL FIX
+   ----------------------------------------------------------
+   Only affects small screens. Desktop detail UI is untouched.
+   Prevents the archive information panel from overflowing the
+   viewport and keeps every field readable.
+   ========================================================== */
+
+@media (max-width: 768px) {
+  .detail-overlay {
+    z-index: 3000 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 64px 12px 76px !important;
+    overflow: hidden !important;
+  }
+
+  .detail-panel {
+    width: min(100%, 430px) !important;
+    max-width: 100% !important;
+    max-height: calc(100dvh - 140px) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 46px 20px 18px !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .detail-panel__close {
+    top: 13px !important;
+    right: 14px !important;
+    z-index: 2;
+  }
+
+  .detail-panel__header {
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+    margin-bottom: 14px !important;
+  }
+
+  .detail-panel__body {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .detail-name {
+    font-size: clamp(34px, 12vw, 58px) !important;
+    line-height: 1 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .detail-latin {
+    font-size: 12px !important;
+  }
+
+  .detail-emotion-row {
+    flex-wrap: wrap !important;
+  }
+
+  .detail-emotion,
+  .emotion-v {
+    overflow-wrap: anywhere !important;
+  }
+
+  .detail-secondary {
+    line-height: 1.5 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .detail-meaning {
+    font-size: 18px !important;
+    line-height: 1.4 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .detail-desc {
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .detail-meta {
+    gap: 10px !important;
+  }
+
+  .meta-v {
+    font-size: 9px !important;
+    line-height: 1.55 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .detail-panel__footer {
+    flex-direction: column !important;
+    gap: 7px !important;
+    line-height: 1.5 !important;
+    overflow-wrap: anywhere !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .detail-overlay {
+    padding: 58px 8px 70px !important;
+  }
+
+  .detail-panel {
+    padding: 43px 16px 15px !important;
+    max-height: calc(100dvh - 125px) !important;
+  }
+
+  .detail-panel__header {
+    font-size: 6px !important;
+  }
+
+  .detail-name {
+    font-size: 39px !important;
+  }
+
+  .detail-meaning {
+    font-size: 16px !important;
+  }
+
+  .detail-desc {
+    font-size: 12px !important;
+  }
+}

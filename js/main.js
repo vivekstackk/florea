@@ -2181,6 +2181,118 @@
 
 
   /* ================================================================
+     MOBILE TAP FALLBACK
+     ---------------------------------------------------------------
+     On touch devices a tiny finger movement can set hasDragged=true
+     before the browser emits click. That can make a real tap on a
+     specimen appear to do nothing. This fallback recognizes only a
+     short touch on a card and opens the same existing detail panel.
+     Desktop pointer/click behavior is unchanged.
+     ================================================================ */
+
+  if (IS_TOUCH && viewport) {
+    let touchCard = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchMoved = false;
+
+    viewport.addEventListener(
+      "touchstart",
+      e => {
+        if (
+          state.intro ||
+          state.isFocused ||
+          !e.touches ||
+          e.touches.length !== 1
+        ) {
+          touchCard = null;
+          return;
+        }
+
+        const target = e.target.closest(".card");
+
+        if (!target) {
+          touchCard = null;
+          return;
+        }
+
+        touchCard = target;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchMoved = false;
+      },
+      { passive: true }
+    );
+
+    viewport.addEventListener(
+      "touchmove",
+      e => {
+        if (
+          !touchCard ||
+          !e.touches ||
+          e.touches.length !== 1
+        ) {
+          return;
+        }
+
+        const dx =
+          e.touches[0].clientX -
+          touchStartX;
+
+        const dy =
+          e.touches[0].clientY -
+          touchStartY;
+
+        if (
+          Math.hypot(dx, dy) > 12
+        ) {
+          touchMoved = true;
+        }
+      },
+      { passive: true }
+    );
+
+    viewport.addEventListener(
+      "touchend",
+      () => {
+        if (
+          !touchCard ||
+          touchMoved ||
+          state.intro ||
+          state.isFocused
+        ) {
+          touchCard = null;
+          return;
+        }
+
+        const index =
+          cards.indexOf(touchCard);
+
+        if (index !== -1) {
+          state.hasDragged = false;
+          focusCard(
+            touchCard,
+            index
+          );
+        }
+
+        touchCard = null;
+      },
+      { passive: true }
+    );
+
+    viewport.addEventListener(
+      "touchcancel",
+      () => {
+        touchCard = null;
+        touchMoved = true;
+      },
+      { passive: true }
+    );
+  }
+
+
+  /* ================================================================
      CARD EVENTS
      ================================================================ */
 
