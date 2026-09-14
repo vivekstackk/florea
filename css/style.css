@@ -467,10 +467,53 @@ body::after {
 }
 
 @media (max-width: 768px) {
-  body { cursor: auto; }
-  .cursor { display: none !important; }
-  .header__nav { display: none; }
-  .header__logo { left: 20px; }
+  body {
+    cursor: auto;
+    touch-action: pan-y;
+  }
+
+  .cursor {
+    display: none !important;
+  }
+
+  /* MOBILE HEADER — navigation stays visible */
+  .header {
+    height: 58px;
+    padding: 0 14px;
+    z-index: 1000;
+    justify-content: flex-end;
+  }
+
+  .header__logo {
+    left: 20px;
+    font-size: 15px;
+    z-index: 1001;
+  }
+
+  .header__nav {
+    display: flex !important;
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    gap: 1px;
+    padding: 2px 3px;
+    z-index: 1001;
+  }
+
+  .header__nav a {
+    display: block;
+    padding: 6px 8px;
+    font-size: 8px;
+    letter-spacing: .08em;
+  }
+
+  .header__nav #nav-home {
+    display: none;
+  }
+
+  .canvas-viewport {
+    touch-action: pan-y;
+  }
 }
 /* ==========================================================
    FLORÉA — FIRST ENTRY ANIMATION

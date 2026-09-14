@@ -51,6 +51,54 @@
       }
     
 
+      /* =========================================================
+         MOBILE ARCHIVE NAVIGATION FIX
+         Keep 1 / 2 / 3 visible on phones.
+         ========================================================= */
+      @media (max-width: 768px) {
+        .header {
+          z-index: 1000 !important;
+          height: 58px;
+          padding: 0 14px;
+          justify-content: flex-end;
+        }
+
+        .header__logo {
+          left: 20px !important;
+          z-index: 1001 !important;
+        }
+
+        .header__nav {
+          display: flex !important;
+          position: absolute !important;
+          right: 12px !important;
+          top: 12px !important;
+          z-index: 1002 !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
+          gap: 1px;
+        }
+
+        .header__nav a {
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
+          padding: 6px 8px;
+          font-size: 8px;
+        }
+
+        .header__nav #nav-home {
+          display: none !important;
+        }
+
+        .canvas-viewport {
+          touch-action: pan-y;
+        }
+      }
+
+
       .music-toggle {
         position: fixed;
         right: 28px;
@@ -717,6 +765,51 @@
       if (target === 2) page2();
       if (target === 3) page3();
     };
+
+    /* =========================================================
+       MOBILE SWIPE NAVIGATION
+       Tab 1: swipe UP → Tab 2.
+       Tab 2 and Tab 3 handle their own internal swipes.
+       ========================================================= */
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    window.addEventListener("touchstart", e => {
+      if (page !== 1 || locked || e.touches.length !== 1) return;
+
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchStartTime = Date.now();
+    }, { passive: true });
+
+    window.addEventListener("touchend", e => {
+      if (page !== 1 || locked || e.changedTouches.length !== 1) return;
+
+      const touch = e.changedTouches[0];
+
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      const elapsed = Date.now() - touchStartTime;
+
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+
+      /* Ignore taps */
+      if (absY < 65) return;
+
+      /* Ignore horizontal gestures */
+      if (absY < absX * 1.25) return;
+
+      /* Ignore very slow gestures */
+      if (elapsed > 1200) return;
+
+      /* Finger UP = next page */
+      if (dy < -65) {
+        page2();
+      }
+    }, { passive: true });
 
     active(nav1);
   })();
