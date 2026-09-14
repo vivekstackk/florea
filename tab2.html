@@ -642,6 +642,329 @@
         display: none;
       }
     }
+
+
+    /* Mobile layout only — desktop remains unchanged */
+    @media (max-width: 600px) {
+      html,
+      body {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden !important;
+      }
+
+      body {
+        min-height: 100dvh;
+      }
+
+      .page {
+        width: 100%;
+        min-height: 100dvh;
+        padding: 68px 16px 48px;
+      }
+
+      .page-header {
+        width: 100%;
+        height: 58px;
+        padding: 0 16px;
+      }
+
+      .brand {
+        font-size: 14px;
+        letter-spacing: .2em;
+      }
+
+      .hero {
+        width: 100%;
+        min-height: calc(100dvh - 105px);
+        padding: 18px 0 35px;
+      }
+
+      .eyebrow {
+        font-size: 6px;
+        letter-spacing: .27em;
+        margin-bottom: 20px;
+      }
+
+      .hero-title {
+        max-width: 100%;
+        font-size: clamp(58px, 19vw, 86px);
+        line-height: .86;
+        word-spacing: .18em;
+      }
+
+      .hero-title::after {
+        width: 52px;
+        margin-top: 27px;
+      }
+
+      .intro {
+        width: min(330px, 90vw);
+        margin-top: 24px;
+        font-size: 21px;
+        line-height: 1.08;
+      }
+
+      .name-form {
+        width: min(360px, 90vw);
+        margin-top: 40px;
+      }
+
+      .name-input {
+        height: 58px;
+        font-size: 34px;
+        padding-bottom: 7px;
+      }
+
+      .continue {
+        margin-top: 22px;
+        padding: 13px 26px;
+      }
+
+      .hint {
+        font-size: 5.5px;
+        letter-spacing: .13em;
+        line-height: 1.5;
+      }
+
+      .result {
+        width: 100%;
+        max-width: 100%;
+        padding: 18px 0 70px;
+      }
+
+      .result-head {
+        width: 100%;
+        margin-bottom: 34px;
+        padding-bottom: 12px;
+      }
+
+      .result-kicker,
+      .result-number {
+        font-size: 5.5px;
+        letter-spacing: .18em;
+      }
+
+      .personal-result-intro {
+        width: 100%;
+        margin-bottom: 38px;
+      }
+
+      .personal-result-name {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        font-size: clamp(52px, 16vw, 78px);
+        line-height: .9;
+      }
+
+      .personal-result-answer {
+        margin-top: 14px;
+        font-size: 8px;
+        line-height: 1.5;
+        letter-spacing: .15em;
+      }
+
+      .personal-result-answer span {
+        display: inline-block;
+        max-width: 88vw;
+        font-size: 30px;
+        line-height: .9;
+        vertical-align: -5px;
+        overflow-wrap: anywhere;
+      }
+
+      .personal-result-why {
+        width: min(350px, 92vw);
+        margin-top: 19px;
+        font-size: 23px;
+        line-height: 1.08;
+      }
+
+      .specimen {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 38px;
+      }
+
+      .image-column,
+      .info-column {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .image-column {
+        position: relative;
+        top: auto;
+      }
+
+      .image-frame {
+        width: 100%;
+        max-width: 430px;
+        margin: 0 auto;
+        aspect-ratio: 1 / 1.08;
+      }
+
+      .image-frame::before {
+        inset: 10px;
+      }
+
+      .image-frame::after {
+        right: 17px;
+        bottom: 15px;
+        font-size: 7px;
+      }
+
+      .image-caption {
+        width: 100%;
+        margin-top: 9px;
+        font-size: 5.5px;
+        letter-spacing: .16em;
+      }
+
+      .info-column {
+        padding-top: 0;
+      }
+
+      .your-specimen {
+        font-size: 6px;
+        letter-spacing: .2em;
+        margin-bottom: 16px;
+      }
+
+      .flower-name {
+        max-width: 100%;
+        font-size: clamp(58px, 17vw, 86px);
+        line-height: .78;
+        overflow-wrap: anywhere;
+      }
+
+      .latin {
+        margin-top: 19px;
+        font-size: 24px;
+      }
+
+      .accent-line {
+        margin: 27px 0 23px;
+      }
+
+      .meaning {
+        max-width: 100%;
+        font-size: clamp(27px, 8vw, 38px);
+        line-height: 1;
+      }
+
+      .meta {
+        margin-top: 34px;
+      }
+
+      .meta-row {
+        grid-template-columns: 76px minmax(0, 1fr);
+        gap: 12px;
+        padding: 13px 0;
+      }
+
+      .meta-label {
+        font-size: 5.5px;
+        letter-spacing: .15em;
+      }
+
+      .meta-value {
+        min-width: 0;
+        font-size: 21px;
+        line-height: 1;
+        overflow-wrap: anywhere;
+      }
+
+      .message {
+        max-width: 100%;
+        margin-top: 32px;
+        font-size: 24px;
+        line-height: 1.08;
+      }
+
+      .personal-fit {
+        padding-left: 16px;
+      }
+
+      .personal-fit::before {
+        font-size: 5.5px;
+        letter-spacing: .18em;
+      }
+
+      .actions {
+        width: 100%;
+        margin-top: 30px;
+        gap: 8px;
+      }
+
+      .action {
+        flex: 1 1 auto;
+        min-height: 40px;
+        padding: 11px 13px;
+        font-size: 5.5px;
+      }
+
+      .footer {
+        width: 100%;
+        margin-top: 48px;
+        padding-top: 14px;
+        gap: 7px;
+        font-size: 5.5px;
+        line-height: 1.4;
+      }
+
+      .return-hint {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .page {
+        padding-left: 13px;
+        padding-right: 13px;
+      }
+
+      .page-header {
+        padding-left: 13px;
+        padding-right: 13px;
+      }
+
+      .hero-title {
+        font-size: 57px;
+      }
+
+      .intro {
+        font-size: 19px;
+      }
+
+      .personal-result-name {
+        font-size: 49px;
+      }
+
+      .flower-name {
+        font-size: 56px;
+      }
+
+      .meaning {
+        font-size: 26px;
+      }
+
+      .meta-row {
+        grid-template-columns: 68px minmax(0, 1fr);
+        gap: 9px;
+      }
+
+      .meta-value {
+        font-size: 19px;
+      }
+
+      .action {
+        letter-spacing: .12em;
+      }
+    }
+
   </style>
 </head>
 

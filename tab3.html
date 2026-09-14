@@ -1,238 +1,728 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Floréa — Motion Herbarium</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FLORÉA — Spatial Botanical Archive</title>
+  <meta name="description" content="An experimental spatial botanical archive where flowers represent human emotions.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+    <style>
+      html.florea-tab2-open,
+      html.florea-tab2-open body {
+        overflow: hidden !important;
+      }
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400&family=DM+Sans:wght@300;400;500&family=Ballet&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+      .florea-tab2-frame {
+        position: fixed;
+        inset: 0;
+        z-index: 80;
+        width: 100vw;
+        height: 100vh;
+        border: 0;
+        display: block;
+        background: #f5f3ee;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(100%);
+        transition:
+          transform 0.9s cubic-bezier(.77,0,.18,1),
+          opacity 0.45s ease,
+          visibility 0s linear 0.9s;
+      }
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+      .florea-tab2-frame.is-visible {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0);
+        transition:
+          transform 0.9s cubic-bezier(.77,0,.18,1),
+          opacity 0.45s ease;
+      }
 
-<style>
- :root{--paper:#f6f4ef;--ink:#171612;--muted:#918d84;--line:rgba(23,22,18,.13)}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--paper);color:var(--ink)}
-body{font-family:"DM Sans",sans-serif;overflow-x:hidden}
-.sequence{height:300vh}
-.pin{position:relative;height:100vh;overflow:hidden;background:var(--paper)}
-.editorial{position:absolute;left:7vw;top:50%;transform:translateY(-50%);width:340px;z-index:8}
-.kicker{font:500 8px "DM Sans",sans-serif;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
-.title{margin:0;font-family:"Bodoni Moda",serif;font-size:clamp(62px,6.7vw,104px);font-weight:400;line-height:.84;letter-spacing:-.055em}
-.copy{width:275px;margin-top:28px;font-family:"DM Sans",sans-serif;font-size:15px;font-weight:300;line-height:1.65;letter-spacing:-.01em;color:#777269}
-.botanical{position:absolute;right:4vw;top:4vh;width:min(62vw,850px);height:92vh}
-.botanical svg{width:100%;height:100%;overflow:visible}
-.draw{fill:none;stroke:#26241f;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}
-.soft{fill:none;stroke:#888278;stroke-width:.65;stroke-linecap:round;opacity:.48}
-.leaf{fill:#f0ece3;stroke:#302e29;stroke-width:.9}
-.vein{fill:none;stroke:#777168;stroke-width:.6;opacity:.7}
-.petal{fill:#eee9df;stroke:#2d2a25;stroke-width:.9}
-.petalline{fill:none;stroke:#8b857b;stroke-width:.65;opacity:.65}
-.center{fill:#29251f}
-.word{position:absolute;left:52%;top:55%;transform:translate(-50%,-50%);z-index:9;text-align:center;pointer-events:none;width:360px}
-.word h2{margin:0;font-family:"Ballet",cursive;font-size:clamp(64px,6.4vw,108px);font-weight:400;line-height:.82;letter-spacing:-.015em;white-space:nowrap}
-.word p{margin:20px 0 0;font:500 7px "DM Sans",sans-serif;letter-spacing:.28em;text-transform:uppercase;color:var(--muted)}
-.bottom{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);font:500 7px "DM Sans",sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#96928a;z-index:20;white-space:nowrap}
-.counter{position:absolute;right:28px;bottom:24px;z-index:20;font:500 7px "DM Sans",sans-serif;letter-spacing:.22em;color:var(--muted)}
-.return{position:absolute;left:28px;bottom:20px;z-index:20;border:1px solid var(--line);background:rgba(246,244,239,.72);padding:10px 14px;font:500 7px "DM Sans",sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);cursor:pointer;backdrop-filter:blur(8px)}
-@media(max-width:800px){
-  .editorial{left:22px;top:12%;transform:none;width:210px}
-  .title{font-size:52px;line-height:.88}
-  .copy{width:190px;font-size:13px;line-height:1.55}
-  .botanical{right:-26vw;top:19vh;width:118vw;height:74vh}
-  .word{left:48%;top:60%;width:240px}
-  .word h2{font-size:66px}
-}
-@media(prefers-reduced-motion:reduce){.sequence{height:100vh}}
-</style>
+      @media (max-width: 768px) {
+        .florea-tab2-frame {
+          height: 100dvh;
+        }
+      }
+    
+
+      .music-toggle {
+        position: fixed;
+        right: 28px;
+        bottom: 26px;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 12px;
+        border: 1px solid rgba(17,17,15,.14);
+        background: rgba(245,243,238,.78);
+        color: #11110f;
+        font-family: "DM Mono", monospace;
+        font-size: 8px;
+        font-weight: 400;
+        letter-spacing: .18em;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: transform .3s ease, background .3s ease, border-color .3s ease;
+      }
+
+      .music-toggle:hover {
+        transform: translateY(-2px);
+        background: rgba(255,255,255,.92);
+        border-color: rgba(17,17,15,.28);
+      }
+
+      .music-toggle__icon {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 15px;
+        line-height: 1;
+      }
+
+      .music-toggle.is-playing .music-toggle__icon {
+        animation: floreaMusicPulse 1.4s ease-in-out infinite;
+      }
+
+      @keyframes floreaMusicPulse {
+        0%, 100% { transform: scale(1); opacity: .55; }
+        50% { transform: scale(1.22); opacity: 1; }
+      }
+
+      @media (max-width: 768px) {
+        .music-toggle {
+          right: 16px;
+          bottom: 16px;
+        }
+      }
+
+      /* =========================================================
+         TAB 3 — FULL-SCREEN MOTION HERBARIUM
+         ========================================================= */
+
+      html.florea-tab3-open,
+      html.florea-tab3-open body {
+        overflow: hidden !important;
+      }
+
+      .florea-tab3-frame {
+        position: fixed;
+        inset: 0;
+        z-index: 90;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        border: 0;
+        display: block;
+        background: #f5f3ee;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(100%);
+        transition:
+          transform 0.95s cubic-bezier(.77,0,.18,1),
+          opacity 0.45s ease,
+          visibility 0s linear 0.95s;
+      }
+
+      .florea-tab3-frame.is-visible {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0);
+        transition:
+          transform 0.95s cubic-bezier(.77,0,.18,1),
+          opacity 0.45s ease;
+      }
+
+      @media (max-width: 768px) {
+        .florea-tab3-frame {
+          height: 100dvh;
+        }
+      }
+
+    </style>
 </head>
-
 <body>
-<section class="sequence" id="sequence">
-<div class="pin">
+​
+  <canvas id="ambient-canvas" class="ambient-canvas" aria-hidden="true"></canvas>
+​
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <div class="cursor__reticle"></div>
+    <div class="cursor__dot"></div>
+  </div>
+​
+  <header class="header">
+    <div class="header__logo">FLORÉA</div>
+    <nav class="header__nav" aria-label="Archive navigation">
+      <a href="#" class="is-active" id="nav-home">Creative Space</a>
+      <a href="#" data-page="1">1</a>
+      <a href="#" data-page="2">2</a>
+      <a href="#" data-page="3">3</a>
+    </nav>
+  </header>
+​
+  <!-- ==================== VERTICAL 3D SPATIAL ARCHIVE ==================== -->
+  <main class="canvas-viewport is-entering" id="canvas-viewport">
+    <div class="gallery-scene" id="gallery-scene">
+​
+      <!-- 01: Top-left accent -->
+      <article class="card card--white"
+               style="width:96px;height:96px"
+               data-x="-220" data-y="-280" data-z="-60"
+               data-scale="1.0"
+               data-name="White Lily" data-latin="Lilium candidum" data-emotion="PURITY"
+               data-secondary="PEACE · TRANQUILITY" data-meaning="Untouched innocence and serene stillness."
+               data-description="A radiant bloom dissolving into warm gallery parchment." data-symbolism="Purity, tranquil silence."
+               data-origin="Balkan Peninsula" data-specimen="SPECIMEN 004" data-image="assets/images/flower-white.png">
+        <img src="assets/images/flower-white.png" alt="White Lily" class="card-img">
+      </article>
+​
+      <!-- 02: Top-center -->
+      <article class="card card--gray"
+               style="width:96px;height:96px"
+               data-x="60" data-y="-300" data-z="40"
+               data-scale="1.0"
+               data-name="Macro Texture" data-latin="Cellula petalorum" data-emotion="WONDER"
+               data-secondary="CELLULAR ARCHITECTURE" data-meaning="The hidden microscopic universe within flower petals."
+               data-description="Microscopic anatomical study of botanical cellular geometry." data-symbolism="Hidden depths."
+               data-origin="Optical Herbarium" data-specimen="SPECIMEN 052" data-image="assets/images/flower-macro.png">
+        <img src="assets/images/flower-macro.png" alt="Macro Texture" class="card-img">
+      </article>
+​
+      <!-- 03: Upper-right -->
+      <article class="card card--pink"
+               style="width:96px;height:96px"
+               data-x="280" data-y="-240" data-z="-90"
+               data-scale="1.0"
+               data-name="Tulip" data-latin="Tulipa gesneriana" data-emotion="PERFECT LOVE"
+               data-secondary="ELEGANCE · DECLARATION" data-meaning="Noble passion and aristocratic grace."
+               data-description="The prized jewel of the Ottoman court and European royal collections." data-symbolism="Declaration of pure affection."
+               data-origin="Pamir Mountains" data-specimen="SPECIMEN 003" data-image="assets/images/flower-tulip.png">
+        <img src="assets/images/flower-tulip.png" alt="Tulip" class="card-img">
+      </article>
+​
+      <!-- 04: Mid-left -->
+      <article class="card card--white"
+               style="width:96px;height:96px"
+               data-x="-310" data-y="-120" data-z="80"
+               data-scale="1.0"
+               data-name="Pressed Specimen" data-latin="Folia conservata" data-emotion="REMEMBRANCE"
+               data-secondary="NOSTALGIA · TIME" data-meaning="Botanical memories preserved between linen parchment."
+               data-description="A historical herbarium specimen preserved through delicate pressure." data-symbolism="Quiet reflection."
+               data-origin="Vault IV · Archive" data-specimen="SPECIMEN 087" data-image="assets/images/flower-pressed.png">
+        <img src="assets/images/flower-pressed.png" alt="Pressed Specimen" class="card-img">
+      </article>
+​
+      <!-- 05: Mid-center-left -->
+      <article class="card card--white"
+               style="width:96px;height:96px"
+               data-x="-100" data-y="-150" data-z="-120"
+               data-scale="1.0"
+               data-name="Sunflower" data-latin="Helianthus annuus" data-emotion="JOY"
+               data-secondary="LOYALTY · WARMTH" data-meaning="Radiant warmth and steadfast adoration toward light."
+               data-description="Sacred botanical form revered as the living reflection of solar transit." data-symbolism="Joyous illumination."
+               data-origin="High Plains" data-specimen="SPECIMEN 033" data-image="assets/images/flower-sunflower.png">
+        <img src="assets/images/flower-sunflower.png" alt="Sunflower" class="card-img">
+      </article>
+​
+      <!-- 06: Mid-center-right -->
+      <article class="card card--black"
+               style="width:96px;height:96px"
+               data-x="180" data-y="-100" data-z="60"
+               data-scale="1.0"
+               data-name="Nocturne" data-latin="Flos nocturnus" data-emotion="MELANCHOLY"
+               data-secondary="DEPTH · SOLITUDE" data-meaning="Shadow companion to the radiant daylight bloom."
+               data-description="Deeply pigmented petals that reveal their fragrance only under moonlight." data-symbolism="Sacred melancholy."
+               data-origin="Alpine Woodland" data-specimen="SPECIMEN 041" data-image="assets/images/flower-dark.png">
+        <img src="assets/images/flower-dark.png" alt="Nocturne" class="card-img">
+      </article>
+​
+      <!-- 07: CENTER HERO -->
+      <article class="card card--white card--hero"
+               style="width:96px;height:96px"
+               data-x="20" data-y="-20" data-z="140"
+               data-scale="1.0"
+               data-name="Iris" data-latin="Iris germanica" data-emotion="WISDOM"
+               data-secondary="FAITH · VALOR · SERENITY" data-meaning="Divine wisdom, profound faith, and quiet communication."
+               data-description="Named after the Greek goddess of rainbows — the celestial messenger uniting mortal and divine realms." data-symbolism="Messages from celestial light."
+               data-origin="Mediterranean Basin" data-specimen="SPECIMEN 001" data-image="assets/images/flower-iris.png">
+        <img src="assets/images/flower-iris.png" alt="Iris" class="card-img">
+      </article>
+​
+      <!-- 08: Center-left -->
+      <article class="card card--slate"
+               style="width:96px;height:96px"
+               data-x="-200" data-y="40" data-z="-40"
+               data-scale="1.0"
+               data-name="Rose" data-latin="Rosa damascena" data-emotion="PASSION"
+               data-secondary="DEVOTION · YEARNING" data-meaning="Sacred devotion, intense romantic longing."
+               data-description="Ancient emblem of passionate ardor protected by watchful thorns." data-symbolism="Passion guarded by truth."
+               data-origin="Levant &amp; Persia" data-specimen="SPECIMEN 021" data-image="assets/images/flower-rose.png">
+        <img src="assets/images/flower-rose.png" alt="Rose" class="card-img">
+      </article>
+​
+      <!-- 09: Center-right -->
+      <article class="card card--white"
+               style="width:96px;height:96px"
+               data-x="300" data-y="20" data-z="-100"
+               data-scale="1.0"
+               data-name="Cortex Radicis" data-latin="Substratum foliorum" data-emotion="ORIGIN"
+               data-secondary="PRIMAL EARTH" data-meaning="The ancient bedrock of soil, stone, and subterranean roots."
+               data-description="Microscopic root networks bonded to mineral earth in perennial renewal." data-symbolism="Quiet perseverance."
+               data-origin="Alpine Biome" data-specimen="SPECIMEN 068-B" data-image="assets/images/flower-texture.png">
+        <img src="assets/images/flower-texture.png" alt="Cortex Radicis" class="card-img">
+      </article>
+​
+      <!-- 10: Lower-left -->
+      <article class="card card--white"
+               style="width:96px;height:96px"
+               data-x="-140" data-y="150" data-z="100"
+               data-scale="1.0"
+               data-name="Floréa Surrealis" data-latin="Floris chimerica" data-emotion="SUBLIME"
+               data-secondary="TRANSCENDENCE · MYSTERY" data-meaning="The ephemeral nature of memory and immortal grace."
+               data-description="A rare chimeric bloom residing at the poetic threshold of imagination." data-symbolism="Eternal longing."
+               data-origin="Digital Herbarium" data-specimen="SPECIMEN 002" data-image="assets/images/flower-hero.png">
+        <img src="assets/images/flower-hero.png" alt="Floréa Surrealis" class="card-img">
+      </article>
+​
+      <!-- 11: Lower-center-right -->
+      <article class="card card--darkgreen"
+               style="width:96px;height:96px"
+               data-x="140" data-y="170" data-z="-50"
+               data-scale="1.0"
+               data-name="Botanical Substrate" data-latin="Substratum foliorum" data-emotion="ROOTEDNESS"
+               data-secondary="SILENCE · EARTH" data-meaning="The quiet organic foundation of all botanical life."
+               data-description="Foliage matrix bathed in diffuse morning forest light." data-symbolism="Endurance and regeneration."
+               data-origin="Boreal Conservatory" data-specimen="SPECIMEN 068" data-image="assets/images/flower-texture.png">
+        <img src="assets/images/flower-texture.png" alt="Botanical Substrate" class="card-img">
+      </article>
+​
+      <!-- 12: Bottom-left -->
+      <article class="card card--black"
+               style="width:96px;height:96px"
+               data-x="-260" data-y="260" data-z="-70"
+               data-scale="1.0"
+               data-name="Umbra Somnium" data-latin="Flos nocturnus" data-emotion="SHADOW"
+               data-secondary="NURTURING VOID" data-meaning="The quiet void where roots take hold and dreams awaken."
+               data-description="Monochrome nocturnal bloom offering restful sanctuary." data-symbolism="Restful oblivion."
+               data-origin="Subterranean Conservatory" data-specimen="SPECIMEN 042" data-image="assets/images/flower-dark.png">
+        <img src="assets/images/flower-dark.png" alt="Umbra Somnium" class="card-img">
+      </article>
+​
+      <!-- 13: Bottom-center -->
+      <article class="card card--black"
+               style="width:96px;height:96px"
+               data-x="50" data-y="290" data-z="70"
+               data-scale="1.0"
+               data-name="Rosa Gallica" data-latin="Rosa gallica" data-emotion="DEVOTION"
+               data-secondary="SACRED ARDOR" data-meaning="A love so total and unwavering it leaves nothing withheld."
+               data-description="The ancient apothecary rose cultivated across medieval monasteries." data-symbolism="Unbroken dedication."
+               data-origin="Ancient Provence" data-specimen="SPECIMEN 021-B" data-image="assets/images/flower-rose.png">
+        <img src="assets/images/flower-rose.png" alt="Rosa Gallica" class="card-img">
+      </article>
+​
+    </div>
+  
+  </main>
+​
+  <!-- ==================== EXHIBITION FOOTER ==================== -->
+  <footer class="archive-footer" aria-hidden="true">
+    <span class="archive-footer__brand">FLORÉA</span>
+    <span class="archive-footer__tag">Botanical Archive</span>
+  </footer>
+​
+  <!-- ==================== DETAIL OVERLAY ==================== -->
+  <aside class="detail-overlay" id="detail-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="detail-panel">
+      <button class="detail-panel__close" id="detail-close-btn" aria-label="Close">
+        <span>CLOSE ARCHIVE</span>
+        <span class="close-x">×</span>
+      </button>
+      <div class="detail-panel__header">
+        <span class="detail-ref" id="detail-ref">SPECIMEN 001</span>
+        <span class="detail-origin" id="detail-origin">MEDITERRANEAN BASIN</span>
+      </div>
+      <div class="detail-panel__body">
+        <h2 class="detail-name" id="detail-name">Iris</h2>
+        <div class="detail-latin" id="detail-latin">Iris germanica</div>
+        <div class="detail-emotion-row">
+          <span class="emotion-k">EMOTION</span>
+          <span class="emotion-v" id="detail-emotion">WISDOM</span>
+        </div>
+        <div class="detail-secondary" id="detail-secondary">FAITH · VALOR</div>
+        <blockquote class="detail-meaning" id="detail-meaning">"Love, wisdom."</blockquote>
+        <div class="detail-divider"></div>
+        <p class="detail-desc" id="detail-desc">Named after the Greek goddess of rainbows.</p>
+        <div class="detail-meta">
+          <div class="meta-row">
+            <span class="meta-k">SYMBOLISM</span>
+            <span class="meta-v" id="detail-symbolism">Celestial light.</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-k">CURATION</span>
+            <span class="meta-v">Floréa Digital Botanical Herbarium</span>
+          </div>
+        </div>
+      </div>
+      <div class="detail-panel__footer">
+        <span>PRESS [ESC] OR CLICK OUTSIDE TO RETURN</span>
+        <span>FLORÉA DIGITAL BOTANICAL ARCHIVE</span>
+      </div>
+    </div>
+  </aside>
+​
+​
+  <!-- ==================== TAB 2 · EXTERNAL EXPERIENCE ==================== -->
+  <iframe
+    id="florea-tab2"
+    class="florea-tab2-frame"
+    src="./tab2.html"
+    title="Your Flower"
+    aria-hidden="true">
+  </iframe>
 
+  <!-- ==================== TAB 3 · SCROLL FRAME EXPERIENCE ==================== -->
+  <iframe
+    id="florea-tab3"
+    class="florea-tab3-frame"
+    src="./tab3.html"
+    title="Floréa Motion Herbarium"
+    aria-hidden="true">
+  </iframe>
+  <!-- ==================== AMBIENT MUSIC ==================== -->
 
-<div class="editorial">
-<div class="kicker">A BOTANICAL THREAD</div>
-<h1 class="title">The<br>Unfolding</h1>
-<p class="copy">A quiet study of a flower becoming itself. Scroll through the specimen and reveal it line by line.</p>
-</div>
+  <audio
+    id="florea-music"
+    autoplay
+    loop
+    preload="auto"
+  >
+    <source src="assets/music/Baagay.mp3" type="audio/mpeg">
+  </audio>
 
-<div class="botanical">
-<svg viewBox="0 0 760 900" role="img" aria-label="Botanical line drawing">
+  <button
+    class="music-toggle is-playing"
+    id="music-toggle"
+    type="button"
+    aria-label="Turn ambient music off"
+  >
+    <span class="music-toggle__icon">♪</span>
+    <span class="music-toggle__text">SOUND ON</span>
+  </button>
 
-<path id="stem" class="draw" d="M380 850 C372 760 386 676 376 590 C366 505 389 430 379 350 C371 282 390 220 382 150"/>
+  <script>
+  (() => {
+    const music = document.getElementById("florea-music");
+    const toggle = document.getElementById("music-toggle");
 
-<path id="thread1" class="soft" d="M386 850 C421 770 423 698 411 633 C400 566 421 507 414 445"/>
-<path id="thread2" class="soft" d="M369 847 C339 778 335 711 345 648 C354 586 339 521 347 462"/>
+    if (!music || !toggle) return;
 
-<path id="branch1" class="draw" d="M377 626 C330 592 287 574 237 568"/>
-<path id="branch2" class="draw" d="M379 500 C426 470 467 441 513 404"/>
-<path id="branch3" class="draw" d="M378 398 C333 370 298 344 262 309"/>
-<path id="branch4" class="draw" d="M383 695 C430 671 472 657 522 658"/>
+    const text = toggle.querySelector(".music-toggle__text");
+    const VOLUME = 1.0;
 
-<path id="leaf1" class="leaf" d="M237 568 C197 540 166 550 149 582 C179 605 215 604 237 568Z"/>
-<path class="vein" d="M154 581 C184 582 211 575 236 568"/>
+    let playing = false;
+    let userTurnedOff = false;
 
-<path id="leaf2" class="leaf" d="M513 404 C548 369 579 374 596 404 C568 430 535 430 513 404Z"/>
-<path class="vein" d="M591 404 C561 404 537 405 514 404"/>
+    music.volume = VOLUME;
 
-<path id="leaf3" class="leaf" d="M262 309 C226 278 197 286 181 315 C207 341 238 337 262 309Z"/>
-<path class="vein" d="M186 315 C212 316 238 313 261 309"/>
-
-<path id="leaf4" class="leaf" d="M522 658 C560 630 590 640 603 670 C574 691 544 687 522 658Z"/>
-<path class="vein" d="M598 669 C570 668 545 662 523 658"/>
-
-<g id="flower">
-<path class="petal" d="M382 150 C342 143 312 115 323 80 C334 47 370 47 389 75 C408 43 443 48 452 80 C461 112 437 140 402 151 C429 168 430 202 402 218 C373 235 346 211 348 181 C318 189 291 168 295 139 C299 109 326 95 353 104 C341 78 355 55 381 52 C408 50 422 74 415 99 C441 87 465 102 470 128 C475 153 451 171 425 167 C435 193 418 218 393 220 C369 221 357 198 363 172Z"/>
-
-<path class="petalline" d="M382 153 C355 130 349 103 362 79"/>
-<path class="petalline" d="M386 153 C408 126 414 101 402 78"/>
-<path class="petalline" d="M385 157 C419 149 442 131 450 108"/>
-<path class="petalline" d="M378 157 C345 158 320 145 307 127"/>
-<path class="petalline" d="M386 164 C405 183 408 203 401 216"/>
-<path class="petalline" d="M375 162 C356 179 352 197 358 210"/>
-<circle class="center" cx="382" cy="158" r="8"/>
-</g>
-
-<path id="tail" class="soft" d="M380 850 C351 804 335 760 340 712"/>
-</svg>
-</div>
-
-<div class="word">
-<h2 id="wordMain">Trace</h2>
-<p id="wordSub">01 · ROOT</p>
-</div>
-
-<div class="bottom">SCROLL TO REVEAL</div>
-<div class="counter">03 / <span id="counter">01</span></div>
-
-<button class="return" id="returnArchive">← RETURN TO ARCHIVE</button>
-
-</div>
-</section>
-
-<script>
-(() => {
-  gsap.registerPlugin(ScrollTrigger);
-
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const drawable = [
-    "#stem","#thread1","#thread2",
-    "#branch1","#branch2","#branch3","#branch4",
-    "#leaf1","#leaf2","#leaf3","#leaf4","#tail"
-  ];
-
-  drawable.forEach(selector => {
-    document.querySelectorAll(selector).forEach(el => {
-      const len = el.getTotalLength();
-      gsap.set(el,{
-        strokeDasharray:len,
-        strokeDashoffset:len
-      });
-    });
-  });
-
-  const wordMain = document.getElementById("wordMain");
-  const wordSub = document.getElementById("wordSub");
-  const counter = document.getElementById("counter");
-
-  const stages = [
-    ["Trace","01 · ROOT"],
-    ["Rise","02 · STEM"],
-    ["Reach","03 · THREAD"],
-    ["Unfold","04 · PETAL"],
-    ["Bloom","05 · SPECIMEN"]
-  ];
-
-  function updateStage(progress){
-    let i = 0;
-    if(progress >= .82) i = 4;
-    else if(progress >= .62) i = 3;
-    else if(progress >= .42) i = 2;
-    else if(progress >= .20) i = 1;
-
-    const next = stages[i];
-
-    if(wordMain.textContent !== next[0]){
-      gsap.to(".word",{opacity:0,y:8,duration:.12,onComplete:()=>{
-        wordMain.textContent = next[0];
-        wordSub.textContent = next[1];
-        counter.textContent = String(i+1).padStart(2,"0");
-        gsap.to(".word",{opacity:1,y:0,duration:.24});
-      }});
+    function updateUI() {
+      toggle.classList.toggle("is-playing", playing);
+      text.textContent = playing ? "SOUND ON" : "SOUND OFF";
+      toggle.setAttribute(
+        "aria-label",
+        playing ? "Turn ambient music off" : "Turn ambient music on"
+      );
     }
-  }
 
-  if(!reduced){
+    async function startMusic() {
+      if (userTurnedOff) return;
 
-    const tl = gsap.timeline({
-      scrollTrigger:{
-        trigger:"#sequence",
-        start:"top top",
-        end:"+=1500",
-        pin:".pin",
-        scrub:.12,
-        invalidateOnRefresh:true,
-        onUpdate:self => updateStage(self.progress)
+      try {
+        music.volume = VOLUME;
+        music.currentTime = 0;
+        await music.play();
+
+        playing = true;
+        updateUI();
+      } catch (error) {
+        playing = false;
+        updateUI();
+      }
+    }
+
+    function stopMusic() {
+      music.pause();
+      playing = false;
+      userTurnedOff = true;
+      updateUI();
+    }
+
+    music.addEventListener("loadedmetadata", () => {
+      music.volume = VOLUME;
+      music.currentTime = 0;
+    });
+
+    music.addEventListener("play", () => {
+      playing = true;
+      updateUI();
+    });
+
+    music.addEventListener("pause", () => {
+      playing = false;
+      updateUI();
+    });
+
+    toggle.addEventListener("click", async (event) => {
+      event.stopPropagation();
+
+      if (playing) {
+        stopMusic();
+      } else {
+        userTurnedOff = false;
+        music.currentTime = 0;
+        music.volume = VOLUME;
+        await startMusic();
       }
     });
 
-    tl.to("#stem",{strokeDashoffset:0,duration:1,ease:"none"})
-      .to("#tail",{strokeDashoffset:0,duration:.25,ease:"none"})
-      .to(["#branch1","#branch2","#branch3","#branch4"],{
-        strokeDashoffset:0,
-        duration:.6,
-        stagger:.07,
-        ease:"none"
-      })
-      .to(["#leaf1","#leaf2","#leaf3","#leaf4"],{
-        strokeDashoffset:0,
-        duration:.65,
-        stagger:.08,
-        ease:"none"
-      })
-      .fromTo("#flower",
-        {opacity:0,scale:.72,transformOrigin:"382px 158px"},
-        {opacity:1,scale:1,duration:.9,ease:"power2.out"}
-      )
-      .to(".word",{y:-22,duration:.55,ease:"power2.out"});
-  } else {
-    drawable.forEach(selector=>{
-      document.querySelectorAll(selector).forEach(el=>{
-        gsap.set(el,{strokeDashoffset:0});
-      });
+    // Default ON. The browser may block audible autoplay.
+    window.addEventListener("load", () => {
+      music.volume = VOLUME;
+      music.currentTime = 0;
+      startMusic();
     });
-  }
 
-  document.getElementById("returnArchive").addEventListener("click",()=>{
-    window.parent.postMessage({type:"FLOREA_TAB3_PREVIOUS"},"*");
-  });
-
-  window.addEventListener("wheel",event=>{
-    if(event.deltaY < 0){
-      const top =
-        window.scrollY ||
-        document.documentElement.scrollTop ||
-        0;
-
-      if(top <= 8){
-        window.parent.postMessage({type:"FLOREA_TAB3_PREVIOUS"},"*");
+    // If autoplay is blocked, the first user interaction starts it.
+    function unlockMusic() {
+      if (!playing && !userTurnedOff) {
+        music.currentTime = 0;
+        music.volume = VOLUME;
+        startMusic();
       }
-    }
-  },{passive:true});
 
-  window.addEventListener("message",event=>{
-    if(event.data?.type === "FLOREA_TAB3_FOCUS_TOP"){
-      window.scrollTo(0,0);
-      ScrollTrigger.refresh();
+      document.removeEventListener("pointerdown", unlockMusic);
+      document.removeEventListener("keydown", unlockMusic);
+      document.removeEventListener("wheel", unlockMusic);
+      document.removeEventListener("touchstart", unlockMusic);
     }
-  });
-})();
-</script>
+
+    document.addEventListener("pointerdown", unlockMusic, { passive: true });
+    document.addEventListener("keydown", unlockMusic);
+    document.addEventListener("wheel", unlockMusic, { passive: true });
+    document.addEventListener("touchstart", unlockMusic, { passive: true });
+
+    updateUI();
+  })();
+  </script>
+
+​
+
+  <!-- ==================== THREE-PAGE NAVIGATION ==================== -->
+  <script>
+  (() => {
+    const tab2 = document.getElementById("florea-tab2");
+    const tab3 = document.getElementById("florea-tab3");
+
+    const nav1 = document.querySelector('[data-page="1"]');
+    const nav2 = document.querySelector('[data-page="2"]');
+    const nav3 = document.querySelector('[data-page="3"]');
+
+    if (!tab2 || !tab3) return;
+
+    let page = 1;
+    let locked = false;
+    let edgeWheel = 0;
+
+    function active(link) {
+      document.querySelectorAll(".header__nav a").forEach(a => {
+        a.classList.remove("is-active");
+      });
+      link?.classList.add("is-active");
+    }
+
+    function transitionLock() {
+      locked = true;
+      setTimeout(() => locked = false, 900);
+    }
+
+    function page1() {
+      if (locked) return;
+
+      page = 1;
+
+      tab2.classList.remove("is-visible");
+      tab3.classList.remove("is-visible");
+
+      tab2.setAttribute("aria-hidden", "true");
+      tab3.setAttribute("aria-hidden", "true");
+
+      document.documentElement.classList.remove(
+        "florea-tab2-open",
+        "florea-tab3-open"
+      );
+
+      active(nav1);
+    }
+
+    function page2() {
+      if (page === 2 || locked) return;
+
+      page = 2;
+      transitionLock();
+
+      tab3.classList.remove("is-visible");
+      tab3.setAttribute("aria-hidden", "true");
+
+      tab2.classList.add("is-visible");
+      tab2.setAttribute("aria-hidden", "false");
+
+      document.documentElement.classList.remove("florea-tab3-open");
+      document.documentElement.classList.add("florea-tab2-open");
+
+      active(nav2);
+
+      tab2.contentWindow?.postMessage(
+        { type: "FLOREA_TAB2_FOCUS_TOP" },
+        "*"
+      );
+    }
+
+    function page3() {
+      if (page === 3 || locked) return;
+
+      page = 3;
+      transitionLock();
+
+      tab2.classList.remove("is-visible");
+      tab2.setAttribute("aria-hidden", "true");
+
+      tab3.classList.add("is-visible");
+      tab3.setAttribute("aria-hidden", "false");
+
+      document.documentElement.classList.remove("florea-tab2-open");
+      document.documentElement.classList.add("florea-tab3-open");
+
+      active(nav3);
+
+      tab3.contentWindow?.postMessage(
+        { type: "FLOREA_TAB3_FOCUS_TOP" },
+        "*"
+      );
+    }
+
+    nav1?.addEventListener("click", e => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      page1();
+    }, true);
+
+    nav2?.addEventListener("click", e => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      page2();
+    }, true);
+
+    nav3?.addEventListener("click", e => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      page3();
+    }, true);
+
+    /*
+      PAGE 1 → PAGE 2
+
+      The normal wheel handler inside main.js continues
+      rotating the flower gallery.
+
+      Only a downward wheel at the extreme left/right
+      edge changes the page.
+    */
+    window.addEventListener("wheel", e => {
+      if (page !== 1 || locked) return;
+
+      const width = Math.max(window.innerWidth, 1);
+      const edge = Math.min(180, Math.max(90, width * 0.14));
+
+      const atEdge =
+        e.clientX <= edge ||
+        e.clientX >= width - edge;
+
+      if (!atEdge) {
+        edgeWheel = 0;
+        return;
+      }
+
+      const vertical =
+        Math.abs(e.deltaY) >= Math.abs(e.deltaX) * 0.8;
+
+      if (!vertical || e.deltaY <= 0) {
+        edgeWheel = 0;
+        return;
+      }
+
+      edgeWheel += e.deltaY;
+
+      if (edgeWheel >= 120) {
+        edgeWheel = 0;
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        page2();
+      }
+    }, {
+      passive: false,
+      capture: true
+    });
+
+    /*
+      TAB 2 → TAB 3 and TAB 2 → TAB 1
+      are sent from tab2.html.
+    */
+    window.addEventListener("message", e => {
+      const type = e.data?.type;
+
+      if (type === "FLOREA_TAB2_NEXT") {
+        page3();
+      }
+
+      if (type === "FLOREA_TAB2_PREVIOUS") {
+        page1();
+      }
+
+      if (type === "FLOREA_TAB3_PREVIOUS") {
+        page2();
+      }
+
+      if (type === "FLOREA_RETURN_ARCHIVE") {
+        page1();
+      }
+    });
+
+    window.addEventListener("keydown", e => {
+      if (e.key !== "Escape") return;
+
+      if (page === 3) page2();
+      else if (page === 2) page1();
+    });
+
+    window.FLOREA_SHOW_PAGE = target => {
+      if (target === 1) page1();
+      if (target === 2) page2();
+      if (target === 3) page3();
+    };
+
+    active(nav1);
+  })();
+  </script>
+
+  <script src="js/main.js"></script>
+
 </body>
 </html>
