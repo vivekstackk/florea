@@ -724,7 +724,7 @@
 
           <div class="your-specimen">Your Specimen</div>
 
-          <h2 class="flower-name" id="personal-out-flower">
+          <h2 class="flower-name" id="personal-flower-name">
             Iris
           </h2>
 
@@ -808,7 +808,8 @@
           origin: "Balkan Peninsula",
           meaning: "Untouched innocence and serene stillness.",
           specimen: "SPECIMEN 004",
-          image: "assets/images/flower-white.png"
+          image: "assets/images/flower-white.png",
+          traits: ["calm", "gentle", "pure", "peace", "quiet", "soft", "innocent", "serene", "kind", "grace"]
         },
         {
           name: "Macro Texture",
@@ -818,7 +819,8 @@
           origin: "Optical Herbarium",
           meaning: "The hidden microscopic universe within flower petals.",
           specimen: "SPECIMEN 052",
-          image: "assets/images/flower-macro.png"
+          image: "assets/images/flower-macro.png",
+          traits: ["curious", "creative", "wonder", "complex", "observant", "imaginative", "deep", "unusual"]
         },
         {
           name: "Tulip",
@@ -828,7 +830,8 @@
           origin: "Pamir Mountains",
           meaning: "Noble passion and aristocratic grace.",
           specimen: "SPECIMEN 003",
-          image: "assets/images/flower-tulip.png"
+          image: "assets/images/flower-tulip.png",
+          traits: ["love", "devotion", "bold", "elegant", "passion", "warm", "romantic", "loyal", "grace"]
         },
         {
           name: "Pressed Specimen",
@@ -838,7 +841,8 @@
           origin: "Vault IV · Archive",
           meaning: "Botanical memories preserved between linen parchment.",
           specimen: "SPECIMEN 087",
-          image: "assets/images/flower-pressed.png"
+          image: "assets/images/flower-pressed.png",
+          traits: ["memory", "nostalgic", "thoughtful", "reflective", "sensitive", "quiet", "timeless", "emotional"]
         },
         {
           name: "Sunflower",
@@ -848,7 +852,8 @@
           origin: "High Plains",
           meaning: "Radiant warmth and steadfast adoration toward light.",
           specimen: "SPECIMEN 033",
-          image: "assets/images/flower-sunflower.png"
+          image: "assets/images/flower-sunflower.png",
+          traits: ["joy", "bright", "warm", "optimistic", "energy", "sun", "happy", "positive", "radiant", "social"]
         },
         {
           name: "Nocturne",
@@ -858,7 +863,8 @@
           origin: "Alpine Woodland",
           meaning: "Shadow companion to the radiant daylight bloom.",
           specimen: "SPECIMEN 041",
-          image: "assets/images/flower-dark.png"
+          image: "assets/images/flower-dark.png",
+          traits: ["mystery", "deep", "melancholy", "intense", "private", "night", "shadow", "mysterious", "introspective"]
         },
         {
           name: "Iris",
@@ -868,7 +874,8 @@
           origin: "Mediterranean Basin",
           meaning: "Divine wisdom, profound faith, and quiet communication.",
           specimen: "SPECIMEN 001",
-          image: "assets/images/flower-iris.png"
+          image: "assets/images/flower-iris.png",
+          traits: ["wisdom", "intelligent", "intuition", "faith", "vision", "thoughtful", "curious", "strong", "communication"]
         },
         {
           name: "Rose",
@@ -878,7 +885,8 @@
           origin: "Levant & Persia",
           meaning: "Sacred devotion and intense romantic longing.",
           specimen: "SPECIMEN 021",
-          image: "assets/images/flower-rose.png"
+          image: "assets/images/flower-rose.png",
+          traits: ["passion", "love", "intense", "romantic", "strong", "devotion", "desire", "heart", "bold"]
         },
         {
           name: "Cortex Radicis",
@@ -888,7 +896,8 @@
           origin: "Alpine Biome",
           meaning: "The ancient bedrock of soil, stone, and subterranean roots.",
           specimen: "SPECIMEN 068-B",
-          image: "assets/images/flower-texture.png"
+          image: "assets/images/flower-texture.png",
+          traits: ["resilient", "grounded", "patient", "strong", "rooted", "persistent", "steady", "endurance"]
         },
         {
           name: "Floréa Surrealis",
@@ -898,7 +907,8 @@
           origin: "Digital Herbarium",
           meaning: "The ephemeral nature of memory and immortal grace.",
           specimen: "SPECIMEN 002",
-          image: "assets/images/flower-hero.png"
+          image: "assets/images/flower-hero.png",
+          traits: ["dreamer", "dream", "creative", "artistic", "imagination", "longing", "visionary", "unique"]
         },
         {
           name: "Botanical Substrate",
@@ -908,7 +918,8 @@
           origin: "Boreal Conservatory",
           meaning: "The quiet organic foundation of all botanical life.",
           specimen: "SPECIMEN 068",
-          image: "assets/images/flower-texture.png"
+          image: "assets/images/flower-texture.png",
+          traits: ["grounded", "stable", "patient", "reliable", "endurance", "growth", "rooted", "practical"]
         },
         {
           name: "Umbra Somnium",
@@ -918,7 +929,8 @@
           origin: "Subterranean Conservatory",
           meaning: "The quiet void where roots take hold and dreams awaken.",
           specimen: "SPECIMEN 042",
-          image: "assets/images/flower-dark.png"
+          image: "assets/images/flower-dark.png",
+          traits: ["mystery", "dream", "quiet", "private", "deep", "night", "introspective", "shadow"]
         },
         {
           name: "Rosa Gallica",
@@ -928,8 +940,21 @@
           origin: "Ancient Provence",
           meaning: "A love so total and unwavering it leaves nothing withheld.",
           specimen: "SPECIMEN 021-B",
-          image: "assets/images/flower-rose.png"
+          image: "assets/images/flower-rose.png",
+          traits: ["devotion", "loyal", "dedication", "love", "faithful", "commitment", "passion"]
         }
+      ];
+
+      const meaningProfiles = [
+        { words: ["wisdom","wise","knowledge","intelligent","intelligence","learn","learning","scholar","insight","vision","vivek","prajna","vidya"], flower: "Iris" },
+        { words: ["peace","peaceful","calm","serene","tranquil","shanti","sukoon","aman","quiet"], flower: "White Lily" },
+        { words: ["love","beloved","affection","romance","passion","devotion","prem","ishq","mohabbat","priya"], flower: "Rose" },
+        { words: ["joy","happy","happiness","bright","light","sun","radiant","cheerful","anand","khushi","harsh"], flower: "Sunflower" },
+        { words: ["strength","strong","brave","warrior","courage","resilient","power","veer","vir"], flower: "Cortex Radicis" },
+        { words: ["dream","dreamer","imagination","creative","artist","artistic","wonder","unique","fantasy"], flower: "Floréa Surrealis" },
+        { words: ["memory","remembrance","nostalgia","thoughtful","reflection","sensitive"], flower: "Pressed Specimen" },
+        { words: ["mystery","mysterious","shadow","night","deep","secret","introspective"], flower: "Nocturne" },
+        { words: ["devotion","dedication","loyal","faithful","commitment"], flower: "Rosa Gallica" }
       ];
 
       const form = document.getElementById("name-form");
@@ -938,7 +963,8 @@
       const result = document.getElementById("personal-result");
       const error = document.getElementById("name-error");
 
-      const outName = document.getElementById("personal-out-flower");
+      const outName = document.getElementById("personal-out-name");
+      const outFlower = document.getElementById("personal-flower-name");
       const outLatin = document.getElementById("personal-out-latin");
       const outEmotion = document.getElementById("personal-out-emotion");
       const outMeaning = document.getElementById("personal-out-meaning");
@@ -948,22 +974,113 @@
       const outRef = document.getElementById("personal-flower-ref");
       const outLine = document.getElementById("personal-out-line");
       const outImage = document.getElementById("personal-flower-img");
+      const outMessage = document.getElementById("personal-out-message");
 
-      function selectFlower(name) {
-        let hash = 0;
+      const normalize = value =>
+        value
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .trim()
+          .replace(/\s+/g, " ");
 
-        for (let i = 0; i < name.length; i++) {
-          hash = ((hash << 5) - hash) + name.charCodeAt(i);
-          hash |= 0;
+      function hash(value) {
+        let h = 2166136261;
+        for (let i = 0; i < value.length; i++) {
+          h ^= value.charCodeAt(i);
+          h = Math.imul(h, 16777619);
+        }
+        return h >>> 0;
+      }
+
+      function phoneticProfile(value) {
+        const vowels = (value.match(/[aeiouy]/g) || []).length;
+        const consonants = (value.match(/[bcdfghjklmnpqrstvwxyz]/g) || []).length;
+        const length = value.replace(/[^a-z]/g, "").length;
+        const hasSoft = /[lmnrsy]/.test(value);
+        const hasStrong = /[kptbgd]/.test(value);
+        const hasOpen = /[aeo]/.test(value);
+        const hasLong = /(aa|ee|ii|oo|uu|ai|ei|ia|ie)/.test(value);
+
+        if (hasLong && hasSoft) return "dreamer";
+        if (vowels >= consonants && hasOpen) return "joy";
+        if (hasStrong && length >= 6) return "strength";
+        if (hasSoft && vowels >= 2) return "calm";
+        if (length <= 4 && hasStrong) return "bold";
+        if (length >= 8) return "deep";
+        return "unique";
+      }
+
+      function findKnownMeaning(value) {
+        for (const profile of meaningProfiles) {
+          for (const word of profile.words) {
+            if (value === word || value.includes(word)) return profile.flower;
+          }
+        }
+        return null;
+      }
+
+      function scoreFlower(flower, value) {
+        let score = 0;
+        const profile = phoneticProfile(value);
+
+        const direct = findKnownMeaning(value);
+        if (direct === flower.name) score += 100;
+
+        if (
+          (profile === "joy" && flower.name === "Sunflower") ||
+          (profile === "calm" && flower.name === "White Lily") ||
+          (profile === "dreamer" && flower.name === "Floréa Surrealis") ||
+          (profile === "strength" && flower.name === "Cortex Radicis") ||
+          (profile === "deep" && (flower.name === "Iris" || flower.name === "Nocturne")) ||
+          (profile === "bold" && (flower.name === "Rose" || flower.name === "Tulip"))
+        ) score += 25;
+
+        const chars = [...new Set(value.split(""))];
+        for (const trait of flower.traits) {
+          const traitChars = trait.replace(/[^a-z]/g, "");
+          if (traitChars && chars.includes(traitChars[0])) score += 1;
         }
 
-        return flowers[Math.abs(hash) % flowers.length];
+        score += hash(value + flower.name) % 9;
+        return score;
+      }
+
+      function selectFlower(name) {
+        const value = normalize(name);
+        const known = findKnownMeaning(value);
+
+        if (known) {
+          return flowers.find(f => f.name === known);
+        }
+
+        return flowers
+          .map(flower => ({ flower, score: scoreFlower(flower, value) }))
+          .sort((a, b) => b.score - a.score)[0].flower;
+      }
+
+      function createPersonalReading(name, flower) {
+        const value = normalize(name);
+        const profile = phoneticProfile(value);
+
+        const openings = {
+          joy: `${name} has a bright, open rhythm — a name that feels naturally drawn toward warmth and light.`,
+          calm: `${name} carries a softer rhythm, with a quiet quality that feels composed rather than demanding.`,
+          dreamer: `${name} has an unusual, flowing character — it feels imaginative, expressive, and slightly mysterious.`,
+          strength: `${name} has a firm character and a grounded rhythm, suggesting quiet strength rather than noise.`,
+          deep: `${name} has a deeper, more inward character — thoughtful, observant, and not immediately revealed.`,
+          bold: `${name} has a compact, distinctive character with a little edge and confidence.`,
+          unique: `${name} has its own rhythm — distinctive enough to feel less like a label and more like a signature.`
+        };
+
+        return `${openings[profile]} ${flower.name} suits that character: ${flower.meaning.toLowerCase()}`;
       }
 
       function showResult(name) {
         const flower = selectFlower(name);
 
-        outName.textContent = flower.name;
+        outName.textContent = name;
+        outFlower.textContent = flower.name;
         outLatin.textContent = flower.latin;
         outEmotion.textContent = flower.emotion;
         outMeaning.textContent = flower.meaning;
@@ -974,6 +1091,7 @@
         outLine.textContent = flower.specimen;
         outImage.src = flower.image;
         outImage.alt = flower.name;
+        outMessage.textContent = createPersonalReading(name, flower);
 
         result.classList.add("is-visible");
 
@@ -985,7 +1103,7 @@
         });
       }
 
-      form.addEventListener("submit", (event) => {
+      form.addEventListener("submit", event => {
         event.preventDefault();
 
         const name = input.value.trim();
@@ -1006,13 +1124,10 @@
 
       document.getElementById("personal-again").addEventListener("click", () => {
         result.classList.remove("is-visible");
-
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
 
         setTimeout(() => {
+          input.value = "";
           input.focus();
         }, 500);
       });
@@ -1023,7 +1138,7 @@
         }, "*");
       });
 
-      window.addEventListener("wheel", (event) => {
+      window.addEventListener("wheel", event => {
         if (event.deltaY < -55 && window.scrollY <= 5) {
           window.parent.postMessage({
             type: "FLOREA_RETURN_ARCHIVE"
@@ -1031,14 +1146,13 @@
         }
       }, { passive: true });
 
-      window.addEventListener("keydown", (event) => {
+      window.addEventListener("keydown", event => {
         if (event.key === "Escape") {
           window.parent.postMessage({
             type: "FLOREA_RETURN_ARCHIVE"
           }, "*");
         }
       });
-
     })();
   </script>
 
